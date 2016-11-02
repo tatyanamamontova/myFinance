@@ -1,52 +1,25 @@
 from django.shortcuts import render
 
-# Create your views here.
-from django.http import HttpResponse
+from .forms import ChargeForm
 
-def hello_world(request):
-    return HttpResponse('<html>'
-                        '<head>'
-                        '<title>Главная страница</title>'
-                        '</head>'
-                        '<body>'
-                        '<h1>Приветствие</h1><br>'
-                        '<a href="charges">Выписка по счету</a>'
-                        '<body/>'
-                        '</html>')
+from models.RandomTransactions import random_transactions
+from models.Charge import Charge
+
+
+def index(request):
+    form = ChargeForm(request.POST)
+    return render(request, 'index.html', {'form': form})
+
 
 def charges(request):
-    return HttpResponse('<html>'
-                        '<head>'
-                        '<title>Выписка по счету</title>'
-                        '</head>'
-                        '<body>'
-                        '<h1>Выписка по счету</h1><br>'
-                        '<table border=3>'
-                        '<tr>'
-                        '<td>'
-                        'Один'
-                        '</td>'
-                        '<td>'
-                        'Четыре'
-                        '</td>'
-                        '</tr>'
-                        '<tr>'
-                        '<td>'
-                        'Два'
-                        '</td>'
-                        '<td>'
-                        'Пять'
-                        '</td>'
-                        '</tr>'
-                        '<tr>'
-                        '<td>'
-                        'Три'
-                        '</td>'
-                        '<td>'
-                        'Шесть'
-                        '</td>'
-                        '</tr>'
-                        '</table>'
-                        '<a href="/">Главная страница</a>'
-                        '<body/>'
-                        '</html>')
+    transactions = random_transactions()
+    positive = list()
+    negative = list()
+    for each in transactions:
+        if each[1] > 0:
+            positive.append(each)
+        else:
+            negative.append(each)
+
+    return render(request, 'charges.html', {'positive': positive,
+                                            'negative': negative})

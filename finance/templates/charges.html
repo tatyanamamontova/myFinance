@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Случайный генератор</title>
+    </head>
+    <body>
+        <h3>
+            Зачисления
+        </h3>
+        <table border="3">
+            <tr>
+                <th>
+                    Дата
+                </th>
+                <th>
+                    Величина
+                </th>
+            </tr>
+            {% for each in positive %}
+                <tr>
+                    <td>
+                        {{ each.0 }}
+                    </td>
+                    <td>
+                        {{ each.1 }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h3>
+            Списания
+        </h3>
+        <table border="3">
+            <tr>
+                <th>
+                    Дата
+                </th>
+                <th>
+                    Величина
+                </th>
+            </tr>
+            {% for each in negative %}
+                <tr>
+                    <td>
+                        {{ each.0 }}
+                    </td>
+                    <td>
+                        {{ each.1 }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
