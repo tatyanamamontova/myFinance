@@ -15,3 +15,5 @@ def random_transactions():
         random_value = randint(-10000, 10000), randint(0, 99)
         random_value = Decimal('%d.%d' % random_value)
         yield random_date, random_value
+
+# Example
