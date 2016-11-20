@@ -16,5 +16,5 @@ class Account(models.Model):  # банковский счет
     total = models.DecimalField(label='total')
 
     class Meta:
-        db_table1 = 'income'
-        db_table2 = 'outcome'
+        db_table = 'charges'
+
