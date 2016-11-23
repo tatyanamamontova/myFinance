@@ -5,12 +5,12 @@
 # class ChargeForm(Form):
 #
 #     value = DecimalField(
-#         label='Сумма',
+#         label='Summ',
 #         required=True
 #     )
 #
 #     date = DateField(
-#         label='Дата',
+#         label='Date',
 #         required=True
 #     )
 #
@@ -18,11 +18,13 @@
 #         cleaned_data = super().clean()
 #         now = timezone.now().date()
 #         if cleaned_data.get('value', 0) < 0 and cleaned_data.get('date') >= now:
-#             self.add_error('date', 'Нельзя заводить списание на будущее')
+#             self.add_error('date', "You can't do it")
 #         return cleaned_data
 from datetime import date
 from django.forms import ModelForm, fields
 from finance.models import Charge, Account
+
+
 class ChargeForm(ModelForm):
 
     class Meta:

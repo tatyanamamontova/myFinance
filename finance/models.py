@@ -1,20 +1,21 @@
 from django.db import models
 
 
-class Charge(models.Model):  # денежная транзакция
-
-    date = models.DateField(label='date')
-    value = models.DecimalField(label='value')
-    account = models.ForeignKey(Account, related_name='charge')
-
-
-class Account(models.Model):  # банковский счет
+# Bank account
+class Account(models.Model):
 
     account_id = models.CharField(max_length=300)
-    income = models.DecimalField(label='income')
-    outcome = models.DecimalField(label='outcome')
-    total = models.DecimalField(label='total')
+    income = models.DecimalField(max_digits=12, decimal_places=10)
+    outcome = models.DecimalField(max_digits=12, decimal_places=10)
+    total = models.DecimalField(max_digits=12, decimal_places=10)
 
     class Meta:
         db_table = 'charges'
 
+
+# Transaction
+class Charge(models.Model):
+
+    date = models.DateField()
+    value = models.DecimalField(max_digits=12, decimal_places=10)
+    account = models.ForeignKey(Account, related_name='charge')
