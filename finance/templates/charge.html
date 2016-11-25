@@ -1,21 +1,61 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+
+    <!--<head>-->
+        <!--<meta charset="UTF-8">-->
+        <!--<title>New charge</title>-->
+    <!--</head>-->
+
+    <!--<body>-->
+
+        <!--<form method="post">-->
+            <!--{% csrf_token %}-->
+            <!--<h4>Date: </h4>-->
+
+            <!--<h4>Value: </h4>-->
+            <!--<input name="value" type="number"><br><br>-->
+
+            <!--<button type="submit">Submit</button>-->
+        <!--</form>-->
+
+    <!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html>
-
     <head>
-        <meta charset="UTF-8">
-        <title>New charge</title>
+        <title>Транзакция</title>
     </head>
-
     <body>
-
-        <form method="post">
+        <form  method="post">
             {% csrf_token %}
-            <h4>Date: </h4>
-
-            <h4>Value: </h4>
-            <input name="transaction" type="number"><br><br>
-            <button type="submit">Submit</button>
+            <h3>Транзакция</h3>
+            <h4>Дата транзакции</h4>
+            <input name="date" type="date"><br/><br/>
+            <h4>Сумма транзакции</h4>
+            <input name="value" type="number" required><br/>
+            <button type="submit">Отправить</button>
         </form>
-
-    </body>
+        <br/>
+        <h3>
+            Результат транзакции:
+        </h3>
+            {% if form.date.value != None %}
+                Дата транзакции: {{ form.date.value }}
+            {% endif %}
+            {% if form.value.value != None %}
+                <br/>
+                Сумма транзакции: {{ form.value.value }}
+            {% endif %}
+            <h4>Ошибки</h4>
+            {% for error in form.date.errors %}
+                {% if forloop.first %}
+                    <ul>
+                {% endif %}
+                <li>{{ error }}</li>
+                {% if forloop.first %}
+                    </ul>
+                {% endif %}
+            {% empty %}
+                Отсутствуют
+            {% endfor %}
 </html>

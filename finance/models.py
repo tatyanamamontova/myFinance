@@ -1,17 +1,12 @@
 from django.db import models
-from django.forms import ModelForm
-from django.core.exceptions import ValidationError
-from datetime import datetime
-from django.db.models import Count, Sum, Avg
+from django.db.models import Avg
 from django.db.models.functions import TruncMonth
 
 
 # Bank account
 class Account(models.Model):
 
-    account_holder = models.CharField(max_length=300)
-    income = models.DecimalField(max_digits=6, decimal_places=2)
-    outcome = models.DecimalField(max_digits=6, decimal_places=2)
+    account_holder = models.CharField(max_length=300, unique=True)
     total = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
@@ -19,20 +14,6 @@ class Account(models.Model):
 
     class Meta:
         db_table = 'charges'
-
-
-# Validate account creation
-# class CreateAccount(ModelForm):
-#
-#     class Meta:
-#         model = Account
-#         fields = ['account_id','income','outcome']
-#
-#     def clean_account_id(self):
-#         id = self.cleaned_data.get('account_id')
-#         if id != "One":
-#             raise ValidationError("Not valid")
-#         return id
 
 
 # Transaction
