@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>All accounts</title>
+    </head>
+
+    <body>
+        <h3>All accounts</h3>
+        <table border="1">
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Account id
+                </th>
+                <th>
+                    Income
+                </th>
+                <th>
+                    Outcome
+                </th>
+                <th>
+                    Total
+                </th>
+            </tr>
+            {% for each in all_accounts %}
+                <tr>
+                    <td>
+                        {{ each.id }}
+                    </td>
+                    <td>
+                        {{ each }}
+                    </td>
+                    <td>
+                        {{ each.income }}
+                    </td>
+                    <td>
+                        {{ each.outcome }}
+                    </td>
+                    <td>
+                        {{ each.total }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
