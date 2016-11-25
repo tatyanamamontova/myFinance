@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>New charge</title>
+    </head>
+
+    <body>
+
+        <form method="post">
+            {% csrf_token %}
+            <h4>Date: </h4>
+
+            <h4>Value: </h4>
+            <input name="transaction" type="number"><br><br>
+            <button type="submit">Submit</button>
+        </form>
+
+    </body>
+</html>

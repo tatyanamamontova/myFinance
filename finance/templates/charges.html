@@ -1,55 +1,70 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Случайный генератор</title>
+        <title>All charges</title>
     </head>
     <body>
-        <h3>
-            Зачисления
-        </h3>
-        <table border="3">
+        <table>
             <tr>
                 <th>
-                    Дата
+                    Income
                 </th>
                 <th>
-                    Величина
+                    Outcome
                 </th>
             </tr>
-            {% for each in positive %}
-                <tr>
-                    <td>
-                        {{ each.0 }}
-                    </td>
-                    <td>
-                        {{ each.1 }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+            <tr>
+                <td>
 
-        <h3>
-            Списания
-        </h3>
-        <table border="3">
-            <tr>
-                <th>
-                    Дата
-                </th>
-                <th>
-                    Величина
-                </th>
+                    <table border="1">
+                        <tr>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Value
+                            </th>
+                        </tr>
+                        {% for each in incomes %}
+                            <tr>
+                                <td>
+                                    {{ each.date }}
+                                </td>
+                                <td>
+                                    {{ each.value }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </td>
+
+                <td>
+
+                    <table border="1">
+                        <tr>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Value
+                            </th>
+                        </tr>
+                        {% for each in outcomes %}
+                            <tr>
+                                <td>
+                                    {{ each.date }}
+                                </td>
+                                <td>
+                                    {{ each.value }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </td>
+
             </tr>
-            {% for each in negative %}
-                <tr>
-                    <td>
-                        {{ each.0 }}
-                    </td>
-                    <td>
-                        {{ each.1 }}
-                    </td>
-                </tr>
-            {% endfor %}
         </table>
     </body>
 </html>
