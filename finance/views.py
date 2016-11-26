@@ -49,7 +49,6 @@ def create_charge(request, account_holder):
                 Account.objects.filter(account_holder=account_holder)\
                     .update(total=F('total') + form.cleaned_data['value'])
             return redirect('account_view', account_holder=account_holder)
-        return HttpResponse("Error")
     context = {'account': account_holder, 'form':form}
     return render(request, 'charge.html', context)
 
