@@ -22,10 +22,7 @@ def create_account(request):
     if request.method == 'POST':
         form = CreateAccount(request.POST)
         if form.is_valid():
-            account = Account(account_holder=form.cleaned_data['account_holder'],
-                                income=0,
-                                outcome=0,
-                                total=0)
+            account = Account(account_holder=form.cleaned_data['account_holder'], total=0)
             account.save()
 
             return HttpResponse(form.cleaned_data['account_holder'])

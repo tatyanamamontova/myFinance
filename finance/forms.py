@@ -2,6 +2,7 @@ from datetime import date
 from django.forms import ModelForm
 from finance.models import Charge, Account
 
+
 class ChargeForm(ModelForm):
 
     class Meta:
@@ -15,13 +16,14 @@ class ChargeForm(ModelForm):
         today = date.today()
         if value_charge < 0:
             if date_charge > today:
-                self.add_error('date',"Невозможно записать расход на будущее")
+                self.add_error('date',"Can't write future outcome")
         return cleaned_data
 
     def save(self, user):
         obj = super(ChargeForm, self).save(commit=False)
         obj.account = user
         return obj.save()
+
 
 class CreateAccount(ModelForm):
 
