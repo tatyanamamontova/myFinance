@@ -3,10 +3,11 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>All accounts</title>
+        <title>Main page</title>
     </head>
 
     <body>
+        <h3><a href="{% url 'create_account' %}">Create new account</a></h3>
         <h3>All accounts</h3>
         <table border="1">
             <tr>
@@ -26,7 +27,7 @@
                         {{ each.id }}
                     </td>
                     <td>
-                        {{ each }}
+                        <a href="{% url 'account_view' each %}">{{ each }}</a>
                     </td>
                     <td>
                         {{ each.total }}

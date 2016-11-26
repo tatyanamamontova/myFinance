@@ -5,7 +5,8 @@
         <title>Account View | {{ account }}</title>
     </head>
     <body>
-        <h3>Account name - {{ account }}</h3>
+        <h3><a href="{% url 'all_accounts' %}">Main page</a></h3>
+        <h3>Account holder - {{ account }}</h3>
         <a>Total - {{ account.total }}</a><br>
         <a href="{% url 'months' account %}">Statistics by months</a><br>
         <a href="{% url 'new_charge' account %}">Make charge</a><br>

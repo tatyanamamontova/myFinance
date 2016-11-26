@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'account/(?P<account_holder>\w+)/charge', create_charge, name='new_charge'),
     url(r'account/(?P<account_holder>\w+)/months', months, name='months'),
     url(r'account/(?P<account_holder>\w+)', account_view, name='account_view'),
-    url(r'allaccounts', get_all_accounts, name='all_accounts'),
+    url(r'', get_all_accounts, name='all_accounts'),
 ]

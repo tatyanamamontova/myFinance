@@ -1,31 +1,10 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-
-    <!--<head>-->
-        <!--<meta charset="UTF-8">-->
-        <!--<title>New charge</title>-->
-    <!--</head>-->
-
-    <!--<body>-->
-
-        <!--<form method="post">-->
-            <!--{% csrf_token %}-->
-            <!--<h4>Date: </h4>-->
-
-            <!--<h4>Value: </h4>-->
-            <!--<input name="value" type="number"><br><br>-->
-
-            <!--<button type="submit">Submit</button>-->
-        <!--</form>-->
-
-    <!--</body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html>
     <head>
         <title>Транзакция</title>
     </head>
     <body>
+        <h3><a href="{% url 'account_view' account %}">Account holder - {{ account }}</a></h3>
         <form  method="post">
             {% csrf_token %}
             <h3>Транзакция</h3>

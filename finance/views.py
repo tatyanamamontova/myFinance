@@ -1,9 +1,10 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
 from django.db.models import F
+from django.db import transaction
 
 
 def charges(request, account_holder):
@@ -22,10 +23,12 @@ def create_account(request):
     if request.method == 'POST':
         form = CreateAccount(request.POST)
         if form.is_valid():
-            account = Account(account_holder=form.cleaned_data['account_holder'], total=0)
-            account.save()
+            with transaction.atomic():
+                account_holder = form.cleaned_data['account_holder']
+                account = Account(account_holder=account_holder, total=0)
+                account.save()
 
-            return HttpResponse(form.cleaned_data['account_holder'])
+            return redirect('account_view', account_holder)
         else:
              return HttpResponse("Not valid")
     context = {'form': form}
@@ -38,14 +41,16 @@ def create_charge(request, account_holder):
     if request.method == 'POST':
         form = ChargeForm(request.POST)
         if form.is_valid():
-            charge = Charge(account=account,
-                            date=form.cleaned_data['date'],
-                            value=form.cleaned_data['value'])
-            charge.save()
-            Account.objects.filter(account_holder=account_holder).update(total=F('total') + form.cleaned_data['value'])
-            return HttpResponse("Done")
+            with transaction.atomic():
+                charge = Charge(account=account,
+                                date=form.cleaned_data['date'],
+                                value=form.cleaned_data['value'])
+                charge.save()
+                Account.objects.filter(account_holder=account_holder)\
+                    .update(total=F('total') + form.cleaned_data['value'])
+            return redirect('account_view', account_holder=account_holder)
         return HttpResponse("Error")
-    context = {'form':form}
+    context = {'account': account_holder, 'form':form}
     return render(request, 'charge.html', context)
 
 
