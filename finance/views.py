@@ -3,8 +3,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
+from .serializers import AccountSerializer
 from django.db.models import F
 from django.db import transaction
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 def charges(request, account_holder):
@@ -80,3 +85,10 @@ def months(request, account_holder):
     except ObjectDoesNotExist:
         print("Can't find")
     return render(request, 'months.html', {'account': account, 'months': by_months})
+
+
+@api_view(['GET'])
+def serialized_get_all_accounts(request):
+    all_accounts = Account.objects.all()
+    serializer = AccountSerializer(all_accounts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
