@@ -9,7 +9,7 @@ class Account(models.Model):
 
     account_holder = models.CharField(max_length=300, unique=True)
     total = models.DecimalField(max_digits=6, decimal_places=2)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'accounts')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     def __str__(self):
         return str(self.account_holder)
@@ -54,6 +54,10 @@ class UserProfile(AbstractUser):
 
     phone_number = models.IntegerField()#без 8#
     adress = models.CharField(max_length = 300)
+
+    class Meta:
+        permissions = (('can_view_profile', 'Can view profile'),
+                       ('can_edit_profile', 'Can edit profiles data'))
 
 
 

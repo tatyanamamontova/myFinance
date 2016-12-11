@@ -7,13 +7,11 @@
     </head>
 
     <body>
-        <h3><a href="{% url 'create_account' %}">Create new account</a></h3>
+    <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
+        <h3><a href="{% url 'create_account' user %}">Create new account</a></h3>
         <h3>All accounts</h3>
         <table border="1">
             <tr>
-                <th>
-                    Id
-                </th>
                 <th>
                     Account holder
                 </th>
@@ -24,10 +22,7 @@
             {% for each in all_accounts %}
                 <tr>
                     <td>
-                        {{ each.id }}
-                    </td>
-                    <td>
-                        <a href="{% url 'account_view' each %}">{{ each }}</a>
+                        <a href="{% url 'account_view' user each %}">{{ each }}</a>
                     </td>
                     <td>
                         {{ each.total }}

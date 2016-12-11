@@ -5,7 +5,8 @@
         <title>Create account</title>
     </head>
     <body>
-        <form action="{% url 'create_account' %}" method="post">
+    <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
+        <form method="post">
             {% csrf_token %}
             <h3>Input account name:</h3><br/>
             <input name="account_holder" type="text"><br/>
