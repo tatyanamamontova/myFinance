@@ -1,13 +1,15 @@
 from django.db import models
 from django.db.models import Avg
 from django.db.models.functions import TruncMonth
-
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 # Bank account
 class Account(models.Model):
 
     account_holder = models.CharField(max_length=300, unique=True)
     total = models.DecimalField(max_digits=6, decimal_places=2)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'accounts')
 
     def __str__(self):
         return str(self.account_holder)
@@ -42,3 +44,16 @@ class Charge(models.Model):
             .values('month')\
             .annotate(c=Avg('value'))\
             .values('month', 'c')
+
+
+
+
+#define UserProfile
+
+class UserProfile(AbstractUser):
+
+    phone_number = models.IntegerField()#без 8#
+    adress = models.CharField(max_length = 300)
+
+
+

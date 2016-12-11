@@ -5,7 +5,6 @@
         <title>Create account</title>
     </head>
     <body>
-        <h3><a href="{% url 'all_accounts' %}">Main page</a></h3>
         <form action="{% url 'create_account' %}" method="post">
             {% csrf_token %}
             <h3>Input account name:</h3><br/>
