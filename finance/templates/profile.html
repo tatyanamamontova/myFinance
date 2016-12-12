@@ -9,11 +9,13 @@
         </style>
     </head>
 <body>
+    {% if request.user.is_authenticated %}
     <div class="text">
     <br><h2>Profile Username</h2>  {{profile}}</br>
     <br><h2>Profile Phone Number</h2>  {{profile.phone_number}}</br>
     <br><h2>Profile Adress</h2> {{profile.adress}}</br>
         </div>
+    {%endif %}
     <a href="{% url 'create_account' profile %}">Create account</a><br>
     <a href="{% url 'get_all_accounts' profile %}">All accounts</a><br>
     <a href="{% url 'logout_view'%}">Exit the system</a><br>

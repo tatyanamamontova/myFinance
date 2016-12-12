@@ -85,7 +85,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'finance.UserProfile'
+AUTH_USER_MODEL = 'finance.User'
 
 LOGIN_URL = 'user/(?P<login>\w+)$'
 

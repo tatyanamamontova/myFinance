@@ -1,15 +1,17 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm
-from .models import Account, Charge, UserProfile
+from .models import Account, Charge, User
 from django.contrib.auth.models import Permission, ContentType
 from django.db.models import F
 from django.db import transaction
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import (login_required, permission_required)
+from django.views.decorators.cache import never_cache
 
 
 # Enter to system
+
 def login_view(request):
     user_form = LoginForm()
     if request.method == 'POST':
@@ -28,13 +30,16 @@ def login_view(request):
 
 
 # Exit
+
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-    return redirect('/')
+    return render(request, 'logout.html')
 
 
 # Registration
+
+@cache_control(no_cache=True)
 def registration(request):
     user_form = UserProfileForm()
     if request.method == 'POST':
@@ -44,9 +49,9 @@ def registration(request):
             password = user_form.cleaned_data['password']
             phone_number = user_form.cleaned_data['phone_number']
             adress = user_form.cleaned_data['adress']
-            user = UserProfile.objects.create_user(username=username,
-                                                   phone_number=phone_number,
-                                                   adress=adress)
+            user = User.objects.create_user(username=username,
+                                            phone_number=phone_number,
+                                            adress=adress)
             user.set_password(password)
             user.save()
             return redirect('user/(?P<username>\w+)', username)
@@ -57,17 +62,21 @@ def registration(request):
 
 
 # Profile view
+@never_cache
 @login_required(login_url='login')
 def profile_view(request, username):
-    profile = UserProfile.objects.get(username=username)
-    return render(request, 'profile.html', {'profile': profile})
+    profile = User.objects.get(username=username)
+    if profile.is_authenticated():
+        return render(request, 'profile.html', {'profile': profile})
+    else:
+        return HttpResponse("Something wrongs!")
 
 
 # Create the account
 
 @login_required(login_url='login')
 def create_account(request, username):
-    user = UserProfile.objects.get(username=username)
+    user = User.objects.get(username=username)
     form = CreateAccount()
     if request.method == 'POST':
         form = CreateAccount(request.POST)
@@ -76,10 +85,8 @@ def create_account(request, username):
                 account_holder = form.cleaned_data['account_holder']
                 account = Account(user=user, account_holder=account_holder, total=0)
                 account.save()
-            content_type = ContentType.objects.get_for_model(Account)
-            permission = Permission.objects.create(content_type=content_type, codename='can_view_profile')
-            permission.save()
-            user.user_permissions.add(permission)
+            perm = Permission.objects.get(codename='can_view_profile')
+            user.user_permissions.add(perm)
             return redirect('account_view', username, account_holder)
         else:
             return HttpResponse("Not valid")
@@ -87,10 +94,11 @@ def create_account(request, username):
     return render(request, 'create_account.html', context, {'user': user})
 
 # Account view
-@login_required(login_url='login')
-@permission_required('can_view_profile',login_url='login')
+
+@login_required(login_url='logout_view')
+@permission_required('finance.can_view_profile', login_url='logout')
 def account_view(request, username, account_holder):
-    user = UserProfile.objects.get(username=username)
+    user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
     outcomes = Charge.get_outcomes(account)
     incomes = Charge.get_incomes(account)
@@ -103,10 +111,11 @@ def account_view(request, username, account_holder):
 
 
 # All user's accounts
-@login_required(login_url='login')
-@permission_required('can_view_profile',login_url='login')
+
+@login_required(login_url='logout_view')
+@permission_required('finance.can_view_profile', login_url='logout_view')
 def get_all_accounts(request, username):
-    user = UserProfile.objects.get(username=username)
+    user = User.objects.get(username=username)
     all_accounts = Account.objects.filter(user=user)
     print("All accounts: ")
     print(all_accounts)
@@ -115,10 +124,11 @@ def get_all_accounts(request, username):
 
 
 # Charges of account
-@login_required(login_url='login')
-@permission_required('can_view_profile',login_url='login')
+
+@login_required(login_url='logout_view')
+@permission_required('finance.can_view_profile', login_url='logout_view')
 def charges(request, username, account_holder):
-    user = UserProfile.objects.get(username=username)
+    user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
     incomes = Charge.get_incomes(account)
     outcomes = Charge.get_outcomes(account)
@@ -129,10 +139,10 @@ def charges(request, username, account_holder):
 
 
 # Create the charge
-@login_required(login_url='login')
-@permission_required('can_view_profile',login_url='login')
+@login_required(login_url='logout_view')
+@permission_required('finance.can_view_profile', login_url='logout_view')
 def create_charge(request, username, account_holder):
-    user = UserProfile.objects.get(username=username)
+    user = User.objects.get(username=username)
     account = Account.objects.get(account_holder=account_holder)
     form = ChargeForm()
     if request.method == 'POST':
@@ -152,11 +162,11 @@ def create_charge(request, username, account_holder):
 
 
 # Charges by months
-@login_required(login_url='login')
-@permission_required('can_view_profile',login_url='login')
+@login_required(login_url='logout_view')
+@permission_required('finance.can_view_profile', login_url='logout_view')
 def months(request, username, account_holder):
     try:
-        user = UserProfile.objects.get(username=username)
+        user = User.objects.get(username=username)
         account = Account.objects.get(user=user, account_holder=account_holder)
         by_months = Charge.get_by_month(account)
     except ObjectDoesNotExist:
