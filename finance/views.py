@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
-from .serializers import AccountSerializer
+from .serializers import AccountSerializer, MonthStatCollection
 from django.db.models import F
 from django.db import transaction
 
@@ -92,3 +92,16 @@ def serialized_get_all_accounts(request):
     all_accounts = Account.objects.all()
     serializer = AccountSerializer(all_accounts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def serialized_account_view(request, account_holder):
+    account = Account.objects.get(account_holder=account_holder)
+    serializer = AccountSerializer(account)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def serialized_months(request, account_holder):
+    test = MonthStatCollection(account_holder)
+    return test.get(request)
