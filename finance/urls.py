@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from finance.views import charges, create_account, account_view, months, create_charge,login_view, registration, profile_view, logout_view, get_all_accounts
+from finance.views import charges, create_account, account_view, months, create_charge,login_view, registration, \
+    profile_view, logout_view, get_all_accounts
 
 urlpatterns = [
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/$', charges, name='all_charges'),

@@ -45,6 +45,7 @@ class UserProfileForm(ModelForm):
         else:
             return self.cleaned_data['username']
 
+
 class LoginForm(Form):
 
     username = CharField(widget=widgets.TextInput)

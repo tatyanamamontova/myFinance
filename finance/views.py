@@ -36,7 +36,7 @@ def logout_view(request):
 
 # Registration
 def registration(request):
-    user_form = UserProfileForm()
+    # user_form = UserProfileForm()
     if request.method == 'POST':
         user_form = UserProfileForm(request.POST)
         if user_form.is_valid():
@@ -53,8 +53,9 @@ def registration(request):
             return redirect('user/(?P<username>\w+)', username)
         else:
             return HttpResponse('Errors!')
-    context = {'form': user_form}
-    return render(request, 'registration.html', context)
+    # context = {'form': user_form}
+    # return render(request, 'registration.html', context)
+    return HttpResponse("OK")
 
 
 # Profile view
@@ -81,6 +82,7 @@ def create_account(request, username):
             return HttpResponse("Not valid")
     context = {'form': form}
     return render(request, 'create_account.html', context, {'user': user})
+
 
 # Account view
 @login_required
@@ -140,7 +142,6 @@ def create_charge(request, username, account_holder):
             return redirect('account_view',username, account_holder)
     context = {'account': account_holder, 'form': form}
     return render(request, 'charge.html', context)
-
 
 
 # Charges by months
