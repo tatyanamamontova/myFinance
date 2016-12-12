@@ -137,3 +137,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
 }
+
+# Auth user model settings
+AUTH_USER_MODEL = 'finance.User'

@@ -2,10 +2,14 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import ChargeForm, CreateAccount
-from .models import Account, Charge
+from .models import Account, Charge, User
 from .serializers import AccountSerializer, MonthStatCollection
 from django.db.models import F
 from django.db import transaction
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.messages import error
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -58,6 +62,7 @@ def create_charge(request, account_holder):
     return render(request, 'charge.html', context)
 
 
+# @login_required
 def get_all_accounts(request):
     all_accounts = Account.objects.get_queryset()
     print("All accounts: ")
@@ -65,6 +70,7 @@ def get_all_accounts(request):
     return render(request, 'all_accounts.html', {'all_accounts' : all_accounts})
 
 
+@login_required(redirect_field_name='all_accounts')
 def account_view(request, account_holder):
 
     account = Account.objects.get(account_holder=account_holder)
@@ -105,3 +111,27 @@ def serialized_account_view(request, account_holder):
 def serialized_months(request, account_holder):
     test = MonthStatCollection(account_holder)
     return test.get(request)
+
+
+def login_view(request):
+    print(User.objects.get_queryset()[1].username)
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    if not (username and password):
+        return render(request, 'login.html')
+    user = authenticate(username=username, password=password)
+    if not user:
+        # error('Wrong credentials!')
+        print(username)
+        print(password)
+        print("error!")
+        return render(request, 'login.html')
+    login(request, user)
+    return redirect('all_accounts')
+
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('all_accounts')
+    return render(request, 'logout.html')

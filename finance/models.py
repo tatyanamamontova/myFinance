@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Avg
 from django.db.models.functions import TruncMonth
+from django.contrib.auth.models import AbstractUser
 
 
 # Bank account
@@ -42,3 +43,9 @@ class Charge(models.Model):
             .values('month')\
             .annotate(c=Avg('value'))\
             .values('month', 'c')
+
+
+# User
+class User(AbstractUser):
+    phone_number = models.CharField(max_length=16)
+    password = models.CharField(max_length=16)
