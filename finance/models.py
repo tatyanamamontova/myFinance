@@ -55,9 +55,7 @@ class UserProfile(AbstractUser):
     phone_number = models.IntegerField()#без 8#
     adress = models.CharField(max_length = 300)
 
-    class Meta:
-        permissions = (('can_view_profile', 'Can view profile'),
-                       ('can_edit_profile', 'Can edit profiles data'))
+
 
 
 

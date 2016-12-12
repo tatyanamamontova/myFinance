@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm
 from .models import Account, Charge, UserProfile
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, ContentType
 from django.db.models import F
 from django.db import transaction
 from django.contrib.auth import authenticate, login, logout
@@ -49,7 +49,6 @@ def registration(request):
                                                    adress=adress)
             user.set_password(password)
             user.save()
-
             return redirect('user/(?P<username>\w+)', username)
         else:
             return HttpResponse('Errors!')
@@ -58,14 +57,15 @@ def registration(request):
 
 
 # Profile view
-@login_required
+@login_required(login_url='login')
 def profile_view(request, username):
     profile = UserProfile.objects.get(username=username)
     return render(request, 'profile.html', {'profile': profile})
 
 
 # Create the account
-@login_required
+
+@login_required(login_url='login')
 def create_account(request, username):
     user = UserProfile.objects.get(username=username)
     form = CreateAccount()
@@ -76,6 +76,10 @@ def create_account(request, username):
                 account_holder = form.cleaned_data['account_holder']
                 account = Account(user=user, account_holder=account_holder, total=0)
                 account.save()
+            content_type = ContentType.objects.get_for_model(Account)
+            permission = Permission.objects.create(content_type=content_type, codename='can_view_profile')
+            permission.save()
+            user.user_permissions.add(permission)
             return redirect('account_view', username, account_holder)
         else:
             return HttpResponse("Not valid")
@@ -83,7 +87,8 @@ def create_account(request, username):
     return render(request, 'create_account.html', context, {'user': user})
 
 # Account view
-@login_required
+@login_required(login_url='login')
+@permission_required('can_view_profile',login_url='login')
 def account_view(request, username, account_holder):
     user = UserProfile.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -98,7 +103,8 @@ def account_view(request, username, account_holder):
 
 
 # All user's accounts
-@login_required
+@login_required(login_url='login')
+@permission_required('can_view_profile',login_url='login')
 def get_all_accounts(request, username):
     user = UserProfile.objects.get(username=username)
     all_accounts = Account.objects.filter(user=user)
@@ -109,7 +115,8 @@ def get_all_accounts(request, username):
 
 
 # Charges of account
-@login_required
+@login_required(login_url='login')
+@permission_required('can_view_profile',login_url='login')
 def charges(request, username, account_holder):
     user = UserProfile.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -122,7 +129,8 @@ def charges(request, username, account_holder):
 
 
 # Create the charge
-@login_required
+@login_required(login_url='login')
+@permission_required('can_view_profile',login_url='login')
 def create_charge(request, username, account_holder):
     user = UserProfile.objects.get(username=username)
     account = Account.objects.get(account_holder=account_holder)
@@ -144,7 +152,8 @@ def create_charge(request, username, account_holder):
 
 
 # Charges by months
-@login_required
+@login_required(login_url='login')
+@permission_required('can_view_profile',login_url='login')
 def months(request, username, account_holder):
     try:
         user = UserProfile.objects.get(username=username)
