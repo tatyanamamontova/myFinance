@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%block title %}Title{%endblock%}</title>
+        <style>
+            body {background: #FAF0E6}
+            A {color: #A52A2A;}
+            A:visited {color: #800000;}
+              div { text-align:center;}
+               #center { text-align: center;
+                         top: 50%;
+                         left: 50%;
+                         width: 250px;
+                         height: 250px;
+                         position: absolute;
+                         margin-top: -125px;
+                         margin-left: -125px;
+                         width}.content
+            .text{text-align:center}
+        </style>
+</head>
+<body>
+    <div id="center"><div class ="content">
+        {% block center %}{%endblock%}
+    </div></div>
+    <div class="text">
+{%block content%}{%endblock%}
+        </div>
+</body>
+</html>

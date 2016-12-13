@@ -2,8 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm
 from .models import Account, Charge, User
-from django.contrib.auth.models import Permission, ContentType
-
+from django.contrib.auth.models import Permission
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
 from .serializers import AccountSerializer, MonthStatCollection, UserSerializer, ChargeSerializer
@@ -17,6 +16,22 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+
+#For checking users
+#This decorator is checking user
+
+def user_view(view_func):
+    def wrapped(request, username, *args, **kwargs):
+        user = User.objects.get(username=username)
+        if request.user.username == username or request.user.is_superuser:
+            return view_func(request, username,  *args, **kwargs)
+        else:
+            return redirect('logout')
+    return wrapped
+
+#Main page
+def main_page(request):
+    return render(request, 'main_page.html')
 
 # Enter to system
 def login_view(request):
@@ -59,9 +74,10 @@ def registration(request):
                                             adress=adress)
             user.set_password(password)
             user.save()
-            return redirect('user/(?P<username>\w+)', username)
+            return redirect('login')
         else:
-            return HttpResponse('Errors!')
+            info = 'Something is incorrect'
+            return render(request,'registration.html',{'info':info})
     context = {'form': user_form}
     return render(request, 'registration.html', context)
 
@@ -69,6 +85,7 @@ def registration(request):
 # Profile view
 @never_cache
 @login_required(login_url='login')
+@user_view
 def profile_view(request, username):
     profile = User.objects.get(username=username)
     if profile.is_authenticated():
@@ -79,6 +96,7 @@ def profile_view(request, username):
 
 @login_required(login_url='login')
 @api_view(['GET'])
+@user_view
 def serialized_profile_view(request, username):
     profile = User.objects.get(username=username)
     serializer = UserSerializer(profile)
@@ -88,6 +106,7 @@ def serialized_profile_view(request, username):
 
 # Create the account
 @login_required(login_url='login')
+@user_view
 def create_account(request, username):
     user = User.objects.get(username=username)
     form = CreateAccount()
@@ -109,7 +128,7 @@ def create_account(request, username):
 
 # Account view
 @login_required(login_url='logout_view')
-@permission_required('finance.can_view_profile', login_url='logout')
+@user_view
 def account_view(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -125,6 +144,7 @@ def account_view(request, username, account_holder):
 
 @login_required(login_url='login')
 @api_view(['GET'])
+@user_view
 def serialized_account_view(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -134,8 +154,8 @@ def serialized_account_view(request, username, account_holder):
 
 # All user's accounts
 @login_required(login_url='logout_view')
-@permission_required('finance.can_view_profile', login_url='logout_view')
-def get_all_accounts(request, username):
+@user_view
+def get_all_accounts(request, username, account_holder=0):
     user = User.objects.get(username=username)
     all_accounts = Account.objects.filter(user=user)
     print("All accounts: ")
@@ -146,7 +166,8 @@ def get_all_accounts(request, username):
 
 @login_required(login_url='login')
 @api_view(['GET'])
-def serialized_get_all_accounts(request, username):
+@user_view
+def serialized_get_all_accounts(request, username, account_holder=0):
     user = User.objects.get(username=username)
     all_accounts = Account.objects.filter(user=user)
     serializer = AccountSerializer(all_accounts, many=True)
@@ -155,7 +176,7 @@ def serialized_get_all_accounts(request, username):
 
 # Charges of account
 @login_required(login_url='logout_view')
-@permission_required('finance.can_view_profile', login_url='logout_view')
+@user_view
 def charges(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -169,6 +190,7 @@ def charges(request, username, account_holder):
 
 @login_required(login_url='login')
 @api_view(['GET'])
+@user_view
 def serialized_charges(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -179,7 +201,7 @@ def serialized_charges(request, username, account_holder):
 
 # Create the charge
 @login_required(login_url='logout_view')
-@permission_required('finance.can_view_profile', login_url='logout_view')
+@user_view
 def create_charge(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(account_holder=account_holder)
@@ -201,7 +223,7 @@ def create_charge(request, username, account_holder):
 
 # Charges by months
 @login_required(login_url='logout_view')
-@permission_required('finance.can_view_profile', login_url='logout_view')
+@user_view
 def months(request, username, account_holder):
     try:
         user = User.objects.get(username=username)
@@ -214,6 +236,7 @@ def months(request, username, account_holder):
 
 @login_required(login_url='login')
 @api_view(['GET'])
+@user_view
 def serialized_months(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)

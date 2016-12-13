@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from finance.views import serialized_charges, charges, create_account, serialized_account_view, account_view, \
     serialized_months, months, create_charge, login_view, registration, serialized_profile_view, profile_view, \
-    logout_view, serialized_get_all_accounts, get_all_accounts
+    logout_view, serialized_get_all_accounts, get_all_accounts, main_page
 
 urlpatterns = [
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/json$', serialized_charges),
@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'user/(?P<username>\w+)/json$', serialized_profile_view),
     url(r'user/(?P<username>\w+)/$', profile_view, name='profile_view'),
     url(r'^logout/$', logout_view, name='logout_view'),
-    url(r'', login_view, name='login'),
+    url(r'^login/$',login_view, name='login'),
+    url(r'', main_page, name = 'main_page'),
 ]

@@ -52,7 +52,7 @@ class Charge(models.Model):
 # define UserProfile
 class User(AbstractUser):
 
-    phone_number = models.IntegerField()
-    adress = models.CharField(max_length=300)
+    phone_number = models.CharField(max_length=30)
+    adress = models.CharField(max_length=300, blank=True)
 
 
