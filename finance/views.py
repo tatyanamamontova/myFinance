@@ -6,12 +6,12 @@ from django.contrib.auth.models import Permission, ContentType
 
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
-from .serializers import AccountSerializer, MonthStatCollection
+from .serializers import AccountSerializer, MonthStatCollection, UserSerializer, ChargeSerializer
 from django.db.models import F
 from django.db import transaction
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import (login_required, permission_required)
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import never_cache, cache_control
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -19,7 +19,6 @@ from rest_framework.response import Response
 
 
 # Enter to system
-
 def login_view(request):
     user_form = LoginForm()
     if request.method == 'POST':
@@ -38,7 +37,6 @@ def login_view(request):
 
 
 # Exit
-
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
@@ -46,7 +44,6 @@ def logout_view(request):
 
 
 # Registration
-
 @cache_control(no_cache=True)
 def registration(request):
     user_form = UserProfileForm()
@@ -80,8 +77,15 @@ def profile_view(request, username):
         return HttpResponse("Something wrongs!")
 
 
-# Create the account
+@api_view(['GET'])
+def serialized_profile_view(request, username):
+    profile = User.objects.get(username=username)
+    serializer = UserSerializer(profile)
+    if profile.is_authenticated:
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# Create the account
 @login_required(login_url='login')
 def create_account(request, username):
     user = User.objects.get(username=username)
@@ -101,8 +105,8 @@ def create_account(request, username):
     context = {'form': form}
     return render(request, 'create_account.html', context, {'user': user})
 
-# Account view
 
+# Account view
 @login_required(login_url='logout_view')
 @permission_required('finance.can_view_profile', login_url='logout')
 def account_view(request, username, account_holder):
@@ -118,8 +122,15 @@ def account_view(request, username, account_holder):
                                             'months': months})
 
 
-# All user's accounts
+@api_view(['GET'])
+def serialized_account_view(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    serializer = AccountSerializer(account)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# All user's accounts
 @login_required(login_url='logout_view')
 @permission_required('finance.can_view_profile', login_url='logout_view')
 def get_all_accounts(request, username):
@@ -131,8 +142,15 @@ def get_all_accounts(request, username):
                                                  'user': user})
 
 
-# Charges of account
+@api_view(['GET'])
+def serialized_get_all_accounts(request, username):
+    user = User.objects.get(username=username)
+    all_accounts = Account.objects.filter(user=user)
+    serializer = AccountSerializer(all_accounts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# Charges of account
 @login_required(login_url='logout_view')
 @permission_required('finance.can_view_profile', login_url='logout_view')
 def charges(request, username, account_holder):
@@ -144,6 +162,15 @@ def charges(request, username, account_holder):
                                             'account': account,
                                             'incomes': incomes,
                                             'outcomes': outcomes})
+
+
+@api_view(['GET'])
+def serialized_charges(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    all_charges = Charge.objects.filter(account=account)
+    serializer = ChargeSerializer(all_charges, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # Create the charge
@@ -168,11 +195,13 @@ def create_charge(request, username, account_holder):
     return render(request, 'charge.html', context)
 
 
-def get_all_accounts(request):
-    all_accounts = Account.objects.get_queryset()
-    print("All accounts: ")
-    print(all_accounts)
-    return render(request, 'all_accounts.html', {'all_accounts' : all_accounts})
+# Maybe deprecated
+# def get_all_accounts(request):
+#     all_accounts = Account.objects.get_queryset()
+#     print("All accounts: ")
+#     print(all_accounts)
+#     return render(request, 'all_accounts.html', {'all_accounts' : all_accounts})
+
 
 # Charges by months
 @login_required(login_url='logout_view')
@@ -186,24 +215,10 @@ def months(request, username, account_holder):
         print("Can't find")
     return render(request, 'months.html', {'user': user,'account': account, 'months': by_months})
 
-    return render(request, 'months.html', {'account': account, 'months': by_months})
-
 
 @api_view(['GET'])
-def serialized_get_all_accounts(request):
-    all_accounts = Account.objects.all()
-    serializer = AccountSerializer(all_accounts, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def serialized_account_view(request, account_holder):
-    account = Account.objects.get(account_holder=account_holder)
-    serializer = AccountSerializer(account)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def serialized_months(request, account_holder):
-    test = MonthStatCollection(account_holder)
+def serialized_months(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    test = MonthStatCollection(account)
     return test.get(request)

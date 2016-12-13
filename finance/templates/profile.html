@@ -5,15 +5,16 @@
         <title>Profile View | {{ profile.username }}</title>
         <style>
             .text {
-            text-align: center;
+                text-align: center
+            }
         </style>
     </head>
 <body>
     {% if request.user.is_authenticated %}
     <div class="text">
-    <br><h2>Profile Username</h2>  {{profile}}</br>
-    <br><h2>Profile Phone Number</h2>  {{profile.phone_number}}</br>
-    <br><h2>Profile Adress</h2> {{profile.adress}}</br>
+    <br><h2>Profile Username</h2>  <a>{{profile}}</a></br>
+    <br><h2>Profile Phone Number</h2>  <a>{{profile.phone_number}}</a></br>
+    <br><h2>Profile Adress</h2> <a>{{profile.adress}}</a></br>
         </div>
     {%endif %}
     <a href="{% url 'create_account' profile %}">Create account</a><br>

@@ -1,22 +1,28 @@
 from rest_framework import views
 from rest_framework.serializers import ModelSerializer, Serializer, CharField, IntegerField, DecimalField
 from rest_framework.response import Response
-from .models import Account, Charge
+from .models import Account, Charge, User
 
 
 class AccountSerializer(ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['account_holder', 'total']
+        fields = ['account_holder', 'total', 'user']
 
 
 class ChargeSerializer(ModelSerializer):
-    account = AccountSerializer(source='account')
 
     class Meta:
         model = Charge
-        fields = ['date', 'value', 'account']
+        fields = ['date', 'value']
+
+
+class UserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username', 'phone_number', 'adress']
 
 
 class MonthStatSerializer(Serializer):

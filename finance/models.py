@@ -4,6 +4,7 @@ from django.db.models.functions import TruncMonth
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
+
 # Bank account
 class Account(models.Model):
 
@@ -48,16 +49,10 @@ class Charge(models.Model):
             .values('month', 'c')
 
 
-
-
-#define UserProfile
-
+# define UserProfile
 class User(AbstractUser):
 
-    phone_number = models.IntegerField()#без 8#
-    adress = models.CharField(max_length = 300)
-
-    # @classmethod
-    # def add_permission(self):
+    phone_number = models.IntegerField()
+    adress = models.CharField(max_length=300)
 
 
