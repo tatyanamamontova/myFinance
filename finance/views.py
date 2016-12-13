@@ -77,6 +77,7 @@ def profile_view(request, username):
         return HttpResponse("Something wrongs!")
 
 
+@login_required(login_url='login')
 @api_view(['GET'])
 def serialized_profile_view(request, username):
     profile = User.objects.get(username=username)
@@ -122,6 +123,7 @@ def account_view(request, username, account_holder):
                                             'months': months})
 
 
+@login_required(login_url='login')
 @api_view(['GET'])
 def serialized_account_view(request, username, account_holder):
     user = User.objects.get(username=username)
@@ -142,6 +144,7 @@ def get_all_accounts(request, username):
                                                  'user': user})
 
 
+@login_required(login_url='login')
 @api_view(['GET'])
 def serialized_get_all_accounts(request, username):
     user = User.objects.get(username=username)
@@ -164,6 +167,7 @@ def charges(request, username, account_holder):
                                             'outcomes': outcomes})
 
 
+@login_required(login_url='login')
 @api_view(['GET'])
 def serialized_charges(request, username, account_holder):
     user = User.objects.get(username=username)
@@ -195,14 +199,6 @@ def create_charge(request, username, account_holder):
     return render(request, 'charge.html', context)
 
 
-# Maybe deprecated
-# def get_all_accounts(request):
-#     all_accounts = Account.objects.get_queryset()
-#     print("All accounts: ")
-#     print(all_accounts)
-#     return render(request, 'all_accounts.html', {'all_accounts' : all_accounts})
-
-
 # Charges by months
 @login_required(login_url='logout_view')
 @permission_required('finance.can_view_profile', login_url='logout_view')
@@ -216,6 +212,7 @@ def months(request, username, account_holder):
     return render(request, 'months.html', {'user': user,'account': account, 'months': by_months})
 
 
+@login_required(login_url='login')
 @api_view(['GET'])
 def serialized_months(request, username, account_holder):
     user = User.objects.get(username=username)

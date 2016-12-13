@@ -5,8 +5,10 @@
     <title>Logout</title>
 </head>
 <body>
-<p>Logged out!</p>
-
-<a href="{% url 'login'%}">Click here to login again.</a>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+    <a href="{% url 'login'%}">Click here to login again.</a>
 </body>
 </html>
