@@ -3,11 +3,19 @@ from django.core.exceptions import ObjectDoesNotExist
 from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm
 from .models import Account, Charge, User
 from django.contrib.auth.models import Permission, ContentType
+
+from .forms import ChargeForm, CreateAccount
+from .models import Account, Charge
+from .serializers import AccountSerializer, MonthStatCollection
 from django.db.models import F
 from django.db import transaction
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import (login_required, permission_required)
 from django.views.decorators.cache import never_cache
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 # Enter to system
@@ -160,6 +168,11 @@ def create_charge(request, username, account_holder):
     return render(request, 'charge.html', context)
 
 
+def get_all_accounts(request):
+    all_accounts = Account.objects.get_queryset()
+    print("All accounts: ")
+    print(all_accounts)
+    return render(request, 'all_accounts.html', {'all_accounts' : all_accounts})
 
 # Charges by months
 @login_required(login_url='logout_view')
@@ -172,3 +185,25 @@ def months(request, username, account_holder):
     except ObjectDoesNotExist:
         print("Can't find")
     return render(request, 'months.html', {'user': user,'account': account, 'months': by_months})
+
+    return render(request, 'months.html', {'account': account, 'months': by_months})
+
+
+@api_view(['GET'])
+def serialized_get_all_accounts(request):
+    all_accounts = Account.objects.all()
+    serializer = AccountSerializer(all_accounts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def serialized_account_view(request, account_holder):
+    account = Account.objects.get(account_holder=account_holder)
+    serializer = AccountSerializer(account)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def serialized_months(request, account_holder):
+    test = MonthStatCollection(account_holder)
+    return test.get(request)
