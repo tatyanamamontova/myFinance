@@ -235,28 +235,45 @@ def charge_view(request, username, account_holder, chargeid):
 
 
 @login_required(login_url='login')
-@user_view
 def charge_edit(request, username, account_holder, chargeid):
+    if request.user.is_superuser():
+        user = User.objects.get(username=username)
+        account = Account.objects.get(user=user, account_holder=account_holder)
+        charge = Charge.objects.get(account=account, id=chargeid)
+        form = ChargeEditForm()
+        if request.method == 'POST':
+            form = ChargeEditForm(request.POST)
+            if form.is_valid():
+                new_date = form.cleaned_data['date']
+                new_value = form.cleaned_data['value']
+                if new_date != '':
+                    Charge.objects.filter(id=chargeid).update(date=new_date)
+                if new_value != '':
+                    Charge.objects.filter(id=chargeid).update(value=new_value)
+                return redirect('charge_view', username, account_holder, chargeid)
+            else:
+                return HttpResponse('Not valid')
+            context = {'user': user, 'form': form, 'account': account, 'charge': charge}
+        return render(request, 'charge_edit.html', context)
+    else:
+        return redirect('login')
+
+
+@login_required(login_url='login')
+@user_view
+def charge_delete(request, username, account_holder, chargeid):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
     charge = Charge.objects.get(account=account, id=chargeid)
-    form = ChargeEditForm()
     if request.method == 'POST':
-        form = ChargeEditForm(request.POST)
-        if form.is_valid():
-            new_date = form.cleaned_data['date']
-            new_value = form.cleaned_data['value']
-            if new_date != '':
-                Charge.objects.filter(id=chargeid).update(date=new_date)
-            if new_value != '':
-                Charge.objects.filter(id=chargeid).update(value=new_value)
-            return redirect('charge_view', username, account_holder, chargeid)
-        else:
-            return HttpResponse('Not valid')
-        context = {'user': user, 'form': form, 'account': account, 'charge': charge}
-    return render(request, 'charge_edit.html', context)
+        Charge.objects.filter(account=account,id=chargeid).delete()
+        return redirect('account_view', username, account_holder)
+    else:
+        return HttpResponse('Not valid')
+    return render(request, 'charge_delete.html',{'user': user,
+                                                 'account': account,
+                                                 'charge': charge})
 
-@login_required(lo)
 
 
 @login_required(login_url='login')
