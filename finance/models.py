@@ -53,12 +53,14 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=30)
     adress = models.CharField(max_length=300, blank=True, null=True)
 
+
 class UserEdit(models.Model):
 
-    userprofile = models.CharField(max_length=300,blank=True,null=True)
-    password = models.CharField(max_length=100,blank=True,null=True)
-    phone_number = models.CharField(max_length=100,blank=True,null=True)
-    adress = models.CharField(max_length=300,blank=True,null=True)
+    userprofile = models.CharField(max_length=300, blank=True, null=True)
+    password = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=100, blank=True, null=True)
+    adress = models.CharField(max_length=300, blank=True, null=True)
+
 
 class ChargeEdit(models.Model):
 

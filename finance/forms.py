@@ -67,12 +67,12 @@ class UserProfileEdit(ModelForm):
         model = UserEdit
         fields = ['userprofile', 'password','phone_number','adress']
 
-    # def clean_userprofile(self):
-    #     existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
-    #     if existing.exists():
-    #         raise ValidationError("A user with that username already exists.")
-    #     else:
-    #         return self.cleaned_data['userprofile']
+    def clean_userprofile(self):
+        existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
+        if existing.exists():
+            raise ValidationError("A user with that username already exists.")
+        else:
+            return self.cleaned_data['userprofile']
 
     # def clean_phone_number(self):
     #     phone_number = self.cleaned_data['phone_number']

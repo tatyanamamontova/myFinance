@@ -4,7 +4,7 @@
     <br><h2>Charge Date</h2>  <a>{{ charge.date }}</a></br>
     <br><h2>Charge Value</h2>  <a>{{ charge.value}}</a></br>
     </br>
-    <a href="{% url 'charge_edit' user account charge.id %}">Edit charge</a><br>
+    <a href="{% url 'charge_edit' user account charge.id %}" >Edit charge</a><br>
     <a href="{% url 'charge_delete' user account charge.id %}">Delete charge</a><br>
     <a href="{% url 'account_view' user account %}">Go to page of the account</a><br>
     <a href="{% url 'logout_view'%}">Exit the system</a><br>

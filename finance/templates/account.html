@@ -5,6 +5,7 @@
     <h3>Account holder - {{ account }}</h3>
     <a>Total - {{ account.total }}</a><br>
     <a href="{% url 'edit_account' user account %}">Edit the account</a><br>
+    <a href="{% url 'delete_account' user account %}"> Delete the account</a></br>
     <a href="{% url 'months' user account %}">Statistics by months</a><br>
     <a href="{% url 'new_charge' user account %}">Make charge</a><br>
     <a href="{% url 'all_charges' user account %}">All charges</a>

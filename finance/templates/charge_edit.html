@@ -1,7 +1,7 @@
 {%extends 'base.html'%}
 {%block title%} Edit charge| {{ charge.id }} | {{ user }} {%endblock%}
 {%block content%}
-<form action="{% url 'registration'%}" method="post">
+<form action="{% url 'charge_edit' user account charge.id%}" method="post">
     {% csrf_token %}
     <h3>Input New Date:</h3><br/>
     <input name="date" type="date"><br/>

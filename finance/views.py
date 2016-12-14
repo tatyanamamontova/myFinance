@@ -130,7 +130,7 @@ def create_account(request, username):
 
 
 # Account view
-@login_required(login_url='logout_view')
+@login_required(login_url='login')
 @user_view
 def account_view(request, username, account_holder):
     user = User.objects.get(username=username)
@@ -176,15 +176,15 @@ def edit_account(request, username, account_holder):
 
 
 # Delete the account
+@login_required(login_url = 'login')
+@user_view
 def delete_account(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
     if request.method == 'POST':
-        Account.object.filter(user=user, account_holder=account_holder).delete()
+        Account.objects.filter(user=user, account_holder=account_holder).delete()
         return redirect('profile_view', username)
-    else:
-        return HttpResponse("Not valid")
-    return render(request, 'edit_account.html', {'user': user, 'account': account})
+    return render(request, 'delete_account.html', {'user': user, 'account': account})
 
 
 # All user's accounts
@@ -249,9 +249,9 @@ def charge_edit(request, username, account_holder, chargeid):
                 new_date = form.cleaned_data['date']
                 new_value = form.cleaned_data['value']
                 if new_date != '':
-                    Charge.objects.filter(id=chargeid).update(date=new_date)
+                    Charge.objects.filter(account=account, id=chargeid).update(date=new_date)
                 if new_value != '':
-                    Charge.objects.filter(id=chargeid).update(value=new_value)
+                    Charge.objects.filter(account=account, id=chargeid).update(value=new_value)
                 return redirect('charge_view', username, account_holder, chargeid)
             else:
                 return HttpResponse('Not valid')
@@ -271,8 +271,6 @@ def charge_delete(request, username, account_holder, chargeid):
     if request.method == 'POST':
         Charge.objects.filter(account=account,id=chargeid).delete()
         return redirect('account_view', username, account_holder)
-    else:
-        return HttpResponse('Not valid')
     return render(request, 'charge_delete.html',{'user': user,
                                                  'account': account,
                                                  'charge': charge})
@@ -365,7 +363,8 @@ def edit_user(request, username):
                 User.objects.filter(username=username).update(adress=new_adress)
             if new_username != '':
                 User.objects.filter(username=username).update(username=new_username)
-            return redirect('profile_view',username)
+                username = new_username
+            return redirect('profile_view', username)
         else:
             return HttpResponse('Not valid')
     context = {'user': user, 'form': form}
