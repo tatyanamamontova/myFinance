@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 {%block title%} User|{{user}} edit {%endblock%}
-{%block center%}
+{%block content%}
     <form action="{% url 'edit_user' user%}" method="post">
         {% csrf_token %}
         <h3>Input New Username:</h3><br/>

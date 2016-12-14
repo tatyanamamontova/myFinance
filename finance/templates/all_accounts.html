@@ -3,8 +3,9 @@
  {%block content%}
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
         <h3><a href="{% url 'create_account' user %}">Create new account</a></h3>
+
         <h3>All accounts</h3>
-        <table border="1">
+        <table border="1" bgcolor="white">
             <tr>
                 <th>
                     Account holder

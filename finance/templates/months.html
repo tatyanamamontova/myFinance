@@ -3,7 +3,7 @@
 
 {%block content%}
         <h3><a href="{% url 'account_view' user account %}">Account holder - {{ account }}</a></h3>
-        <table border="1">
+        <table border="1" bgcolor="white">
             <tr>
                 <th>
                     Month, Year
@@ -23,4 +23,4 @@
                 </tr>
             {% endfor %}
         </table>
-{%edblock%}
+{%endblock%}

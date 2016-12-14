@@ -1,7 +1,7 @@
 {%extends 'base.html' %}
 {%block title%} List of users {%endblock%}
 {%block center%}
-<table border="1">
+<table border="1" bgcolor="white">
             <tr>
                 <th>
                     User
@@ -33,5 +33,6 @@
                 </tr>
             {% endfor %}
         </table>
+</br>
     <a href="{% url 'logout_view'%}">Exit the system</a><br>
 {%endblock%}

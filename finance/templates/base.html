@@ -6,7 +6,7 @@
         <style>
             body {background: #FAF0E6}
             A {color: #A52A2A;}
-            A:visited {color: #800000;}
+            A:visited {color: #2F4F4F;}
               div { text-align:center;}
                #center { text-align: center;
                          top: 50%;
@@ -16,14 +16,15 @@
                          position: absolute;
                          margin-top: -125px;
                          margin-left: -125px;
-                         width}.content
-            div text{text-align:center}
+                         }.content
+            div text{ text-align:center}
         </style>
 </head>
 <body>
     <div id="center"><div class ="content">
         {% block center %}{%endblock%}
     </div></div>
-{%block content%}{%endblock%}
+    <div id="text">{%block text%}{%endblock%}</div>
+    {%block content%}{%endblock%}
 </body>
 </html>

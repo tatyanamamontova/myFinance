@@ -223,6 +223,7 @@ def charges(request, username, account_holder):
                                             'outcomes': outcomes})
 
 
+# Charge view
 @login_required(login_url='login')
 @user_view
 def charge_view(request, username, account_holder, chargeid):
@@ -234,6 +235,7 @@ def charge_view(request, username, account_holder, chargeid):
                                                'charge': charge})
 
 
+# Edit charge
 @login_required(login_url='login')
 def charge_edit(request, username, account_holder, chargeid):
     if request.user.is_superuser():
@@ -259,6 +261,7 @@ def charge_edit(request, username, account_holder, chargeid):
         return redirect('login')
 
 
+# Delete charge
 @login_required(login_url='login')
 @user_view
 def charge_delete(request, username, account_holder, chargeid):
@@ -273,7 +276,6 @@ def charge_delete(request, username, account_holder, chargeid):
     return render(request, 'charge_delete.html',{'user': user,
                                                  'account': account,
                                                  'charge': charge})
-
 
 
 @login_required(login_url='login')
@@ -370,6 +372,7 @@ def edit_user(request, username):
     return render(request, 'edit_user.html', context)
 
 
+# Delete some user
 @login_required(login_url='login')
 def delete_user(request, username):
     if request.user.is_superuser:
