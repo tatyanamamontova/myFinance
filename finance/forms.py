@@ -3,6 +3,7 @@ from django.forms import ModelForm, ValidationError, Form, CharField, widgets
 from finance.models import Charge, Account, User, UserEdit
 import re
 
+
 class ChargeForm(ModelForm):
 
     class Meta:
@@ -34,7 +35,6 @@ class CreateAccount(ModelForm):
 
 class UserProfileForm(ModelForm):
 
-    adress = CharField(required=False)
 
     class Meta:
         model = User
@@ -49,7 +49,7 @@ class UserProfileForm(ModelForm):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*)$',phone_number) is None:
+        if re.match(r'^\+\d+$', phone_number) is None:
              raise ValidationError('Not International Format')
         else:
             return self.cleaned_data['phone_number']
@@ -61,30 +61,19 @@ class UserProfileEdit(ModelForm):
         model = UserEdit
         fields = ['userprofile', 'password','phone_number','adress']
 
-    def __init__(self, *args, **kwargs):
-        super(UserProfileEdit, self).__init__(*args, **kwargs)
-        self.fields['userprofile'].required = False
-        self.fields['password'].required = False
-        self.fields['phone_number'].required = False
-        self.fields['adress'].required = False
+    # def clean_userprofile(self):
+    #     existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
+    #     if existing.exists():
+    #         raise ValidationError("A user with that username already exists.")
+    #     else:
+    #         return self.cleaned_data['userprofile']
 
-
-
-
-
-    def clean_userprofile(self):
-        existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
-        if existing.exists():
-            raise ValidationError("A user with that username already exists.")
-        else:
-            return self.cleaned_data['userprofile']
-
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
-        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*)$',phone_number) is None:
-             raise ValidationError('Not International Format')
-        else:
-            return self.cleaned_data['phone_number']
+    # def clean_phone_number(self):
+    #     phone_number = self.cleaned_data['phone_number']
+    #     if re.match(r'^\+\d+$', phone_number) is None:
+    #          raise ValidationError('Not International Format')
+    #     else:
+    #         return self.cleaned_data['phone_number']
 
 class LoginForm(Form):
 

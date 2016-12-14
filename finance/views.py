@@ -302,13 +302,13 @@ def edit_user(request, username):
             new_password = form.cleaned_data['password']
             new_phone_number = form.cleaned_data['phone_number']
             new_adress = form.cleaned_data['adress']
-            if new_password is not 'NULL':
+            if new_password is not None:
                 user.set_password(new_password)
-            if new_phone_number is not 'NULL':
+            if new_phone_number is not None:
                 User.objects.filter(username=username).update(phone_number=new_phone_number)
-            if new_adress is not 'NULL':
+            if new_adress is not None:
                 User.objects.filter(username=username).update(adress=new_adress)
-            if new_username is not 'NULL':
+            if new_username is not None:
                 User.objects.filter(username=username).update(username=new_username)
             return redirect('profile_view',new_username)
         else:
