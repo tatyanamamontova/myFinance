@@ -238,7 +238,7 @@ def charge_view(request, username, account_holder, chargeid):
 # Edit charge
 @login_required(login_url='login')
 def charge_edit(request, username, account_holder, chargeid):
-    if request.user.is_superuser():
+    if request.user.is_superuser:
         user = User.objects.get(username=username)
         account = Account.objects.get(user=user, account_holder=account_holder)
         charge = Charge.objects.get(account=account, id=chargeid)
@@ -255,7 +255,7 @@ def charge_edit(request, username, account_holder, chargeid):
                 return redirect('charge_view', username, account_holder, chargeid)
             else:
                 return HttpResponse('Not valid')
-            context = {'user': user, 'form': form, 'account': account, 'charge': charge}
+        context = {'user': user, 'form': form, 'account': account, 'charge': charge}
         return render(request, 'charge_edit.html', context)
     else:
         return redirect('login')
