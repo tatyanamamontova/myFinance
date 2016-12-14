@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>All charges</title>
-    </head>
-    <body>
+{%extends 'base.html' %}
+{%block title%} All charges of {{user}} {%endblock%}
+{%block content%}
         <h3><a href="{% url 'account_view' user account %}">Account holder - {{ account }}</a></h3>
         <table>
             <tr>
@@ -67,5 +64,4 @@
 
             </tr>
         </table>
-    </body>
-</html>
+{%endblock%}

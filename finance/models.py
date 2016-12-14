@@ -17,8 +17,6 @@ class Account(models.Model):
 
     class Meta:
         db_table = 'charges'
-        permissions = (('can_view_profile','Can view profile'),
-                       ('can_edit_profile', 'Can edit profile'))
 
 
 # Transaction
@@ -55,4 +53,9 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=30)
     adress = models.CharField(max_length=300, blank=True)
 
+class UserEdit(models.Model):
 
+    username = models.CharField(max_length=300, blank=True)
+    password = models.CharField(max_length=100, blank=True)
+    phone_number = models.CharField(max_length=100,blank=True)
+    adress = models.CharField(max_length=300, blank=True)

@@ -1,0 +1,10 @@
+{%extends 'base.html' %}
+{%block title%}Delete user {{user}} {%endblock%}
+{%block content%}
+    <form method="post">
+        {% csrf_token %}
+        <h3>If you are sure that you need to delete {{user}}, please, press the button.</h3>
+        <button type="submit">Delete {{user}}</button>
+    </form>
+    <a href="{% url 'all_users' %}">Click here to return for all_users.</a>
+{%endblock%}

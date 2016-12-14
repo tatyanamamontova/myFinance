@@ -1,0 +1,36 @@
+{%extends 'base.html' %}
+{%block title%} List of users {%endblock%}
+{%block content%}
+<table border="1">
+            <tr>
+                <th>
+                    User
+                </th>
+                <th>
+                   User Edit
+                </th>
+                <th>
+                   User Delete
+                </th>
+                <th>
+                   User Accounts
+                </th>
+            </tr>
+            {% for each in users %}
+                <tr>
+                    <td>
+                        <a href="{% url 'profile_view' each %}">{{ each }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'profile_edit' each %}">Edit {{ each }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'profile_delete' each %}">Delete{{ each }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'get_all_accounts' each %}">All accounts</a><br>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+{%endblock%}

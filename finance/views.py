@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm
+from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm,UserProfileEdit
 from .models import Account, Charge, User
 from django.contrib.auth.models import Permission
 from .forms import ChargeForm, CreateAccount
@@ -17,9 +17,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 
-#For checking users
-#This decorator is checking user
+#Create_superuser
+admin = User.objects.create_superuser(username='admin')
+admin.set_password('admin')
+admin.save()
 
+
+
+#For checking users
 def user_view(view_func):
     def wrapped(request, username, *args, **kwargs):
         user = User.objects.get(username=username)
@@ -117,13 +122,12 @@ def create_account(request, username):
                 account_holder = form.cleaned_data['account_holder']
                 account = Account(user=user, account_holder=account_holder, total=0)
                 account.save()
-            perm = Permission.objects.get(codename='can_view_profile')
-            user.user_permissions.add(perm)
             return redirect('account_view', username, account_holder)
         else:
             return HttpResponse("Not valid")
     context = {'form': form}
     return render(request, 'create_account.html', context, {'user': user})
+
 
 
 # Account view
@@ -151,6 +155,36 @@ def serialized_account_view(request, username, account_holder):
     serializer = AccountSerializer(account)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+#Edit the account
+@login_required(login_url='login')
+@user_view
+def edit_account(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    form = CreateAccount()
+    if request.method == 'POST':
+        form = CreateAccount(request.POST)
+        if form.is_valid():
+            new_account_holder = form.cleaned_data['account_holder']
+            account.account_holder = new_account_holder
+            account.save()
+            return redirect('account_view', username, account_holder)
+        else:
+            return HttpResponse("Not valid")
+    context = {'form': form}
+    return render(request, 'edit_account.html', context, {'user': user, 'account': account})
+
+
+#Delete the account
+def delete_account(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    if request.method == 'POST':
+        Account.object.filter(user=user, account_holder=account_holder).delete()
+        return redirect('profile_view', username)
+    else:
+        return HttpResponse("Not valid")
+    return render(request, 'edit_account.html', {'user': user, 'account': account})
 
 # All user's accounts
 @login_required(login_url='logout_view')
@@ -242,3 +276,50 @@ def serialized_months(request, username, account_holder):
     account = Account.objects.get(user=user, account_holder=account_holder)
     test = MonthStatCollection(account)
     return test.get(request)
+
+#List of all users
+
+@login_required(login_url='login')
+def all_users(request):
+    if request.user.is_superuser:
+        users = User.objects.get_queryset()
+        return render(request, 'all_users',{'users':users})
+    else:
+        return redirect('login')
+
+#Edit user profile
+@login_required(login_url='login')
+@user_view
+def edit_user(request, username):
+    user = User.objects.get(username=username)
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = ChargeForm(request.POST)
+        if form.is_valid():
+            new_username = form.cleaned_data['username']
+            new_password = form.cleaned_data['password']
+            new_phone_number = form.cleaned_data['phone_number']
+            new_adress = form.cleaned_data['adress']
+            if new_username is not None:
+                user.username = new_username
+            if new_password is not None:
+                user.set_password(new_password)
+            if new_phone_number is not None:
+                user.phone_number = new_phone_number
+            if new_adress is not None:
+                user.adress = new_adress
+            user.save()
+            return redirect('profile_view',username)
+    context = {'user': user, 'form': form}
+    return render(request, 'edit_user.html', context)
+
+@login_required(login_url='login')
+def delete_user(request, username):
+    if request.user.is_superuser:
+        user = User.objects.get(username=username)
+        if request.method == 'POST':
+            User.object.filter(user=user, account_holder=account_holder).delete()
+            return redirect('all_users')
+    else:
+        return HttpResponse("Not valid")
+    return render(request, 'delete_account.html', {'user': user})

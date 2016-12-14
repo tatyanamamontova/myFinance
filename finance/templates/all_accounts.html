@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-    <head>
-        <meta charset="UTF-8">
-        <title>Main page</title>
-    </head>
-
-    <body>
+{%extends 'base.html' %}
+{%block title%} Accounts of {{user}} {%endblock%}
+ {%block content%}
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
         <h3><a href="{% url 'create_account' user %}">Create new account</a></h3>
         <h3>All accounts</h3>
@@ -30,5 +24,4 @@
                 </tr>
             {% endfor %}
         </table>
-    </body>
-</html>
+{%endblock%}

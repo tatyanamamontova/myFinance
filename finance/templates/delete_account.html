@@ -1,0 +1,9 @@
+{%extends 'base.html' %}
+{%block title%}Delete account {{account}} {%endblock%}
+{%block content%}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Delete {{account}}</button>
+    </form>
+    <a href="{% url 'profile_view' user%}">Click here to return for profile {{user}}.</a>
+{%endblock%}

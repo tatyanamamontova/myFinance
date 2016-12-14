@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Account View | {{ account }}</title>
-    </head>
-    <body>
-        <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
-        <h3>Account holder - {{ account }}</h3>
-        <a>Total - {{ account.total }}</a><br>
-        <a href="{% url 'months' user account %}">Statistics by months</a><br>
-        <a href="{% url 'new_charge' user account %}">Make charge</a><br>
-        <a href="{% url 'all_charges' user account %}">All charges</a>
-    </body>
-</html>
+{%extends 'base.html' %}
+{%block title%} Account View | {{account}} {%endblock%}
+{%block content%}
+    <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
+    <h3>Account holder - {{ account }}</h3>
+    <a>Total - {{ account.total }}</a><br>
+    <a href="{% url 'edit_account' user account %}">Edit the account</a><br>
+    <a href="{% url 'months' user account %}">Statistics by months</a><br>
+    <a href="{% url 'new_charge' user account %}">Make charge</a><br>
+    <a href="{% url 'all_charges' user account %}">All charges</a>
+{%endblock%}

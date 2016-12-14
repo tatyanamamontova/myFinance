@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<br xmlns="http://www.w3.org/1999/html">
-    <head>
-        <meta charset="UTF-8">
-        <title>Profile View | {{ profile.username }}</title>
-        <style>
-            .text {
-                text-align: center
-            }
-        </style>
-    </head>
-<body>
+{%extends 'base.html' %}
+{%block title%} User |{{profile}} Profile{%endblock%}
+
+{%block content%}
     {% if request.user.is_authenticated %}
     <div class="text">
     <br><h2>Profile Username</h2>  <a>{{profile}}</a></br>
@@ -21,5 +13,4 @@
     <a href="{% url 'get_all_accounts' profile %}">All accounts</a><br>
     <a href="{% url 'logout_view'%}">Exit the system</a><br>
 
-    </body>
-</html>
+{%endblock%}

@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Транзакция</title>
-    </head>
-    <body>
+{%extends 'base.html' %}
+{%block title%} Charge for {{user}} {%endblock%}
+{%block content%}
         <h3><a href="{% url 'account_view' user account %}">Account Holder - {{ account }}</a></h3>
         <form  method="post">
             {% csrf_token %}
@@ -37,4 +34,4 @@
             {% empty %}
                 Отсутствуют
             {% endfor %}
-</html>
+{%endblock%}
