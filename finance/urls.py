@@ -5,6 +5,8 @@ from finance.views import serialized_charges, charges, create_account, serialize
     edit_user,delete_user, charge_view, charge_edit
 
 urlpatterns = [
+    url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/(?P<chargeid>\w+)/delete$', charge_delete,
+        name='charge_delete'),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/(?P<chargeid>\w+)/edit$', charge_edit,
         name='charge_edit'),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/(?P<chargeid>\w+)/$', charge_view,
