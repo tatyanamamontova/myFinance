@@ -2,9 +2,13 @@ from django.conf.urls import url
 from finance.views import serialized_charges, charges, create_account, serialized_account_view, account_view, \
     serialized_months, months, create_charge, login_view, registration, serialized_profile_view, profile_view, \
     logout_view, serialized_get_all_accounts, get_all_accounts, main_page, all_users, edit_account, delete_account,\
-    edit_user,delete_user
+    edit_user,delete_user, charge_view, charge_edit
 
 urlpatterns = [
+    url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/((?P<chargeid>\w+)/edit$', charge_edit,
+        name='charge_edit'),
+    url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/((?P<chargeid>\w+)/$', charge_view,
+        name='charge_view'),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/json$', serialized_charges),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/$', charges, name='all_charges'),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charge/$', create_charge, name='new_charge'),

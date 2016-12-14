@@ -1,6 +1,6 @@
 from datetime import date
 from django.forms import ModelForm, ValidationError, Form, CharField, widgets
-from finance.models import Charge, Account, User, UserEdit
+from finance.models import Charge, ChargeEdit, Account, User, UserEdit
 import re
 
 
@@ -32,6 +32,12 @@ class CreateAccount(ModelForm):
         model = Account
         fields = ['account_holder']
 
+    # def clean_account_holder(self):
+    #     existing = Account.objects.filter(username__iexact=self.cleaned_data['username'])
+    #     if existing.exists():
+    #         raise ValidationError("A user with that username already exists.")
+    #     else:
+    #         return self.cleaned_data['username']
 
 class UserProfileForm(ModelForm):
 
@@ -83,3 +89,9 @@ class LoginForm(Form):
     class Meta:
         fields = ['username', 'password']
 
+
+class ChargeEditForm(ModelForm):
+
+    class Meta:
+        model = ChargeEdit
+        fields = ['date', 'value']

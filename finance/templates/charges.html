@@ -17,6 +17,9 @@
                     <table border="1">
                         <tr>
                             <th>
+                                Id
+                            </th>
+                            <th>
                                 Date
                             </th>
                             <th>
@@ -25,6 +28,9 @@
                         </tr>
                         {% for each in incomes %}
                             <tr>
+                                <td>
+                                    <a href="{% url 'charge_view' user account each.id %}"> {{ each.id }} </a>
+                                </td>
                                 <td>
                                     {{ each.date }}
                                 </td>
@@ -42,6 +48,9 @@
                     <table border="1">
                         <tr>
                             <th>
+                                Id
+                            </th>
+                            <th>
                                 Date
                             </th>
                             <th>
@@ -50,6 +59,9 @@
                         </tr>
                         {% for each in outcomes %}
                             <tr>
+                                <td>
+                                    <a href="{% url 'charge_view' user account each.id %}"> {{ each.id }} </a>
+                                </td>
                                 <td>
                                     {{ each.date }}
                                 </td>

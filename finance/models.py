@@ -59,3 +59,8 @@ class UserEdit(models.Model):
     password = models.CharField(max_length=100,blank=True,null=True)
     phone_number = models.CharField(max_length=100,blank=True,null=True)
     adress = models.CharField(max_length=300,blank=True,null=True)
+
+class ChargeEdit(models.Model):
+
+    date = models.DateField(blank=True, null=True)
+    value = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)

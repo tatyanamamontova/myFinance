@@ -210,7 +210,7 @@ def serialized_get_all_accounts(request, username, account_holder=0):
 
 
 # Charges of account
-@login_required(login_url='logout_view')
+@login_required(login_url='login')
 @user_view
 def charges(request, username, account_holder):
     user = User.objects.get(username=username)
@@ -222,6 +222,22 @@ def charges(request, username, account_holder):
                                             'incomes': incomes,
                                             'outcomes': outcomes})
 
+
+@login_required(login_url='login')
+@user_view
+def charge_view(request, username, account_holder, chargeid):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    charge = Charge.objects.get(account=account, id=chargeid)
+    return render(request,'charge_view.html', {'user': user,
+                                               'account': account,
+                                               'charge': charge})
+
+
+@login_required(login_url='login')
+@user_view
+def charge_edit(request, username, account_holder, chargeid):
+    user
 
 @login_required(login_url='login')
 @api_view(['GET'])
@@ -302,15 +318,15 @@ def edit_user(request, username):
             new_password = form.cleaned_data['password']
             new_phone_number = form.cleaned_data['phone_number']
             new_adress = form.cleaned_data['adress']
-            if new_password is not None:
+            if new_password != '':
                 user.set_password(new_password)
-            if new_phone_number is not None:
+            if new_phone_number != '':
                 User.objects.filter(username=username).update(phone_number=new_phone_number)
-            if new_adress is not None:
+            if new_adress != '':
                 User.objects.filter(username=username).update(adress=new_adress)
-            if new_username is not None:
+            if new_username != '':
                 User.objects.filter(username=username).update(username=new_username)
-            return redirect('profile_view',new_username)
+            return redirect('profile_view',username)
         else:
             return HttpResponse('Not valid')
     context = {'user': user, 'form': form}
