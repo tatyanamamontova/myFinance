@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm, UserProfileEdit
+from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm, UserProfileEdit, ChargeEditForm
 from .models import Account, Charge, User
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
@@ -237,7 +237,27 @@ def charge_view(request, username, account_holder, chargeid):
 @login_required(login_url='login')
 @user_view
 def charge_edit(request, username, account_holder, chargeid):
-    user
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    charge = Charge.objects.get(account=account, id=chargeid)
+    form = ChargeEditForm()
+    if request.method == 'POST':
+        form = ChargeEditForm(request.POST)
+        if form.is_valid():
+            new_date = form.cleaned_data['date']
+            new_value = form.cleaned_data['value']
+            if new_date != '':
+                Charge.objects.filter(id=chargeid).update(date=new_date)
+            if new_value != '':
+                Charge.objects.filter(id=chargeid).update(value=new_value)
+            return redirect('charge_view', username, account_holder, chargeid)
+        else:
+            return HttpResponse('Not valid')
+        context = {'user': user, 'form': form, 'account': account, 'charge': charge}
+    return render(request, 'charge_edit.html', context)
+
+@login_required(lo)
+
 
 @login_required(login_url='login')
 @api_view(['GET'])

@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+{%block title%} Edit charge| {{ charge.id }} | {{ user }} {%endblock%}
+{%block content%}
+<form action="{% url 'registration'%}" method="post">
+    {% csrf_token %}
+    <h3>Input New Date:</h3><br/>
+    <input name="date" type="text"><br/>
+    <h3>Input New Value:</h3><br/>
+    <input name="value" type="text"><br/>
+    <br>
+    <button type="submit">Create</button>
+    <br>
+    <br>You don't have to fill all the fields.<br/>
+</form>
+
+{%endblock%}
