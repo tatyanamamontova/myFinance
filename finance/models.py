@@ -51,11 +51,11 @@ class Charge(models.Model):
 class User(AbstractUser):
 
     phone_number = models.CharField(max_length=30)
-    adress = models.CharField(max_length=300, blank=True)
+    adress = models.CharField(max_length=300, blank=True, null=True)
 
 class UserEdit(models.Model):
 
-    username = models.CharField(max_length=300, blank=True)
-    password = models.CharField(max_length=100, blank=True)
-    phone_number = models.CharField(max_length=100,blank=True)
-    adress = models.CharField(max_length=300, blank=True)
+    userprofile = models.CharField(max_length=300,blank=True,null=True)
+    password = models.CharField(max_length=100,blank=True,null=True)
+    phone_number = models.CharField(max_length=100,blank=True,null=True)
+    adress = models.CharField(max_length=300,blank=True,null=True)

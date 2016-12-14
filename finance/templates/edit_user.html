@@ -1,10 +1,10 @@
 {%extends 'base.html' %}
 {%block title%} User|{{user}} edit {%endblock%}
-{%block content%}
+{%block center%}
     <form action="{% url 'edit_user' user%}" method="post">
         {% csrf_token %}
         <h3>Input New Username:</h3><br/>
-        <input name="username" type="text"><br/>
+        <input name="userprofile" type="text"><br/>
         <h3>Input New Password:</h3><br/>
         <input name="password" type="password"><br/>
         <h3>Input New Phone Number (International Format with +)*:</h3><br/>
@@ -16,3 +16,4 @@
         <br>
         <br>You don't have to fill all the fields.<br/>
     </form>
+{%endblock%}

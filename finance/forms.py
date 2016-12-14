@@ -34,6 +34,8 @@ class CreateAccount(ModelForm):
 
 class UserProfileForm(ModelForm):
 
+    adress = CharField(required=False)
+
     class Meta:
         model = User
         fields = ['username', 'password','phone_number','adress']
@@ -47,27 +49,39 @@ class UserProfileForm(ModelForm):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*){9,}$',phone_number) is None:
+        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*)$',phone_number) is None:
              raise ValidationError('Not International Format')
         else:
             return self.cleaned_data['phone_number']
 
-class UserProfileEdit(Form):
+
+class UserProfileEdit(ModelForm):
 
     class Meta:
         model = UserEdit
-        field = ['username', 'password','phone_number','adress']
+        fields = ['userprofile', 'password','phone_number','adress']
 
-    def clean_username(self):
-        existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
+    def __init__(self, *args, **kwargs):
+        super(UserProfileEdit, self).__init__(*args, **kwargs)
+        self.fields['userprofile'].required = False
+        self.fields['password'].required = False
+        self.fields['phone_number'].required = False
+        self.fields['adress'].required = False
+
+
+
+
+
+    def clean_userprofile(self):
+        existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
         if existing.exists():
             raise ValidationError("A user with that username already exists.")
         else:
-            return self.cleaned_data['username']
+            return self.cleaned_data['userprofile']
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*){9,}$',phone_number) is None:
+        if re.match(r'^\+?[\/.()-]*([0-9][\/.()-]*)$',phone_number) is None:
              raise ValidationError('Not International Format')
         else:
             return self.cleaned_data['phone_number']

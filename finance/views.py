@@ -1,15 +1,14 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm,UserProfileEdit
+from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm, UserProfileEdit
 from .models import Account, Charge, User
-from django.contrib.auth.models import Permission
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
 from .serializers import AccountSerializer, MonthStatCollection, UserSerializer, ChargeSerializer
 from django.db.models import F
 from django.db import transaction
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import (login_required, permission_required)
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
 
 from rest_framework import status
@@ -17,14 +16,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 
-#Create_superuser
-admin = User.objects.create_superuser(username='admin')
-admin.set_password('admin')
-admin.save()
+# Create_superuser in terminal username = 'admin', password = 'qwerty1234'
 
 
-
-#For checking users
+# For checking users
 def user_view(view_func):
     def wrapped(request, username, *args, **kwargs):
         user = User.objects.get(username=username)
@@ -34,9 +29,11 @@ def user_view(view_func):
             return redirect('logout')
     return wrapped
 
-#Main page
+
+# Main page
 def main_page(request):
     return render(request, 'main_page.html')
+
 
 # Enter to system
 def login_view(request):
@@ -51,7 +48,10 @@ def login_view(request):
                 info = 'The username and password were incorrect'
                 return render(request, 'login.html', {'info': info})
             login(request, user)
-            return redirect('profile_view', username=username)
+            if user.is_superuser:
+                return redirect ('all_users')
+            else:
+                return redirect('profile_view', username=username)
     context = {'form': user_form}
     return render(request, 'login.html', context)
 
@@ -129,7 +129,6 @@ def create_account(request, username):
     return render(request, 'create_account.html', context, {'user': user})
 
 
-
 # Account view
 @login_required(login_url='logout_view')
 @user_view
@@ -155,7 +154,8 @@ def serialized_account_view(request, username, account_holder):
     serializer = AccountSerializer(account)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-#Edit the account
+
+# Edit the account
 @login_required(login_url='login')
 @user_view
 def edit_account(request, username, account_holder):
@@ -175,7 +175,7 @@ def edit_account(request, username, account_holder):
     return render(request, 'edit_account.html', context, {'user': user, 'account': account})
 
 
-#Delete the account
+# Delete the account
 def delete_account(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(user=user, account_holder=account_holder)
@@ -185,6 +185,7 @@ def delete_account(request, username, account_holder):
     else:
         return HttpResponse("Not valid")
     return render(request, 'edit_account.html', {'user': user, 'account': account})
+
 
 # All user's accounts
 @login_required(login_url='logout_view')
@@ -277,48 +278,51 @@ def serialized_months(request, username, account_holder):
     test = MonthStatCollection(account)
     return test.get(request)
 
-#List of all users
 
+# List of all users
 @login_required(login_url='login')
 def all_users(request):
     if request.user.is_superuser:
         users = User.objects.get_queryset()
-        return render(request, 'all_users',{'users':users})
+        return render(request, 'all_users.html',{'users':users})
     else:
         return redirect('login')
 
-#Edit user profile
+
+# Edit user profile
 @login_required(login_url='login')
 @user_view
 def edit_user(request, username):
     user = User.objects.get(username=username)
-    form = UserProfileForm()
+    form = UserProfileEdit()
     if request.method == 'POST':
-        form = ChargeForm(request.POST)
+        form = UserProfileEdit(request.POST)
         if form.is_valid():
-            new_username = form.cleaned_data['username']
+            new_username = form.cleaned_data['userprofile']
             new_password = form.cleaned_data['password']
             new_phone_number = form.cleaned_data['phone_number']
             new_adress = form.cleaned_data['adress']
-            if new_username is not None:
-                user.username = new_username
-            if new_password is not None:
+            if new_password is not 'NULL':
                 user.set_password(new_password)
-            if new_phone_number is not None:
-                user.phone_number = new_phone_number
-            if new_adress is not None:
-                user.adress = new_adress
-            user.save()
-            return redirect('profile_view',username)
+            if new_phone_number is not 'NULL':
+                User.objects.filter(username=username).update(phone_number=new_phone_number)
+            if new_adress is not 'NULL':
+                User.objects.filter(username=username).update(adress=new_adress)
+            if new_username is not 'NULL':
+                User.objects.filter(username=username).update(username=new_username)
+            return redirect('profile_view',new_username)
+        else:
+            return HttpResponse('Not valid')
     context = {'user': user, 'form': form}
     return render(request, 'edit_user.html', context)
+
 
 @login_required(login_url='login')
 def delete_user(request, username):
     if request.user.is_superuser:
         user = User.objects.get(username=username)
         if request.method == 'POST':
-            User.object.filter(user=user, account_holder=account_holder).delete()
+            User.objects.filter(username=username).delete()
             return redirect('all_users')
     else:
         return HttpResponse("Not valid")

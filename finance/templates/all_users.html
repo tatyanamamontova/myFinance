@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 {%block title%} List of users {%endblock%}
-{%block content%}
+{%block center%}
 <table border="1">
             <tr>
                 <th>
@@ -22,10 +22,10 @@
                         <a href="{% url 'profile_view' each %}">{{ each }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'profile_edit' each %}">Edit {{ each }}</a>
+                        <a href="{% url 'edit_user' each %}">Edit| {{ each }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'profile_delete' each %}">Delete{{ each }}</a>
+                        <a href="{% url 'delete_user' each %}">Delete| {{ each }}</a>
                     </td>
                     <td>
                         <a href="{% url 'get_all_accounts' each %}">All accounts</a><br>
