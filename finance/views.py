@@ -382,8 +382,9 @@ def delete_user(request, username):
     if request.user.is_superuser:
         user = User.objects.get(username=username)
         if request.method == 'POST':
+            Account.objects.filter(user=user).delete()
             User.objects.filter(username=username).delete()
             return redirect('all_users')
     else:
         return HttpResponse("Not valid")
-    return render(request, 'delete_account.html', {'user': user})
+    return render(request, 'delete_user.html', {'user': user})
