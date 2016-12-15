@@ -4,9 +4,9 @@
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
         <form method="post">
             {% csrf_token %}
-            <h3>Previous account name {{account}}</h3>
-            <h3>Input new account name:</h3><br/>
+            <h3>Input new account holder:</h3><br/>
             <input name="account_holder" type="text"><br/>
+            <br>
             <button type="submit">Create</button>
         </form>
 {%endblock%}

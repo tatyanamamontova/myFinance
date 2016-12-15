@@ -38,7 +38,7 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password','phone_number','adress']
+        fields = ['username', 'password','phone_number','adress', 'url_image']
 
     def clean_username(self):
         existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
@@ -59,7 +59,7 @@ class UserProfileEdit(ModelForm):
 
     class Meta:
         model = UserEdit
-        fields = ['userprofile', 'password','phone_number','adress']
+        fields = ['userprofile', 'password','phone_number','adress', 'url_image']
 
     def clean_userprofile(self):
         existing = User.objects.filter(username__iexact=self.cleaned_data['userprofile'])
@@ -67,6 +67,14 @@ class UserProfileEdit(ModelForm):
             raise ValidationError("A user with that username already exists.")
         else:
             return self.cleaned_data['userprofile']
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data['phone_number']
+        if phone_number != '':
+            if re.match(r'^\+\d+$', phone_number) is None:
+                raise ValidationError('Not International Format')
+        else:
+            return self.cleaned_data['phone_number']
 
 
 class LoginForm(Form):
@@ -77,9 +85,3 @@ class LoginForm(Form):
     class Meta:
         fields = ['username', 'password']
 
-
-# class ChargeEditForm(ModelForm):
-#
-#     class Meta:
-#         model = ChargeEdit
-#         fields = ['date', 'value']

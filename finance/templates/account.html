@@ -3,7 +3,7 @@
 {%block content%}
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
     <h3>Account holder - {{ account }}</h3>
-    <a>Total - {{ account.total }}</a><br>
+    <h3>Total - {{ account.total }}</h3><br>
     <a href="{% url 'edit_account' user account %}">Edit the account</a><br>
     <a href="{% url 'delete_account' user account %}"> Delete the account</a></br>
     <a href="{% url 'months' user account %}">Statistics by months</a><br>

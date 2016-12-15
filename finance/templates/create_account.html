@@ -1,5 +1,5 @@
 {%extends 'base.html' %}
-{%block title%} Create account for {{user}} {%endblock%}
+{%block title%} Create account by {{user}} {%endblock%}
 {%block content%}
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
         <form method="post">

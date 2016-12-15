@@ -2,16 +2,14 @@
 {%block title%} User |{{profile}} Profile{%endblock%}
 
 {%block content%}
-    {% if request.user.is_authenticated %}
     <div class="text">
-    <br><h2>Profile Username</h2>  <a>{{profile}}</a></br>
-    <br><h2>Profile Phone Number</h2>  <a>{{profile.phone_number}}</a></br>
-    <br><h2>Profile Adress</h2> <a>{{profile.adress}}</a></br>
+        <p><img src = {{profile.url_image}} width="200" height="200" border="3s"></p>
+        <br><h2>Profile Username</h2>  <a>{{profile}}</a></br>
+        <br><h2>Profile Phone Number</h2>  <a>{{profile.phone_number}}</a></br>
+        <br><h2>Profile Adress</h2> <a>{{profile.adress}}</a></br>
         </div>
-    {%endif %}
-    <a href="{% url 'edit_user' profile %}">Edit profile</a><br>
-    <a href="{% url 'create_account' profile %}">Create account</a><br>
-    <a href="{% url 'get_all_accounts' profile %}">All accounts</a><br>
-    <a href="{% url 'logout_view'%}">Exit the system</a><br>
-
+        <a href="{% url 'edit_user' profile %}">Edit profile</a><br>
+        <a href="{% url 'create_account' profile %}">Create account</a><br>
+        <a href="{% url 'get_all_accounts' profile %}">All accounts</a><br>
+        <a href="{% url 'logout_view'%}">Exit the system</a><br>
 {%endblock%}

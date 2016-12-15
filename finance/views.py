@@ -75,9 +75,13 @@ def registration(request):
             password = user_form.cleaned_data['password']
             phone_number = user_form.cleaned_data['phone_number']
             adress = user_form.cleaned_data['adress']
+            url_image = user_form.cleaned_data['url_image']
+            if url_image is '':
+                url_image = 'https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg' # Default image
             user = User.objects.create_user(username=username,
                                             phone_number=phone_number,
-                                            adress=adress)
+                                            adress=adress,
+                                            url_image= url_image)
             user.set_password(password)
             user.save()
             return redirect('login')
@@ -360,12 +364,15 @@ def edit_user(request, username):
             new_password = form.cleaned_data['password']
             new_phone_number = form.cleaned_data['phone_number']
             new_adress = form.cleaned_data['adress']
+            new_url_image = form.cleaned_data['url_image']
             if new_password != '':
                 user.set_password(new_password)
             if new_phone_number != '':
                 User.objects.filter(username=username).update(phone_number=new_phone_number)
             if new_adress != '':
                 User.objects.filter(username=username).update(adress=new_adress)
+            if new_url_image != '':
+                User.objects.filter(username=username).update(url_image=new_url_image)
             if new_username != '':
                 User.objects.filter(username=username).update(username=new_username)
                 username = new_username

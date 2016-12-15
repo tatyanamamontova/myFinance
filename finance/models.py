@@ -19,11 +19,6 @@ class Account(models.Model):
     class Meta:
         db_table = 'charges'
 
-    # def clean(self):
-    #     cleaned_data = super(Account, self).clean()
-    #     if self.total < 0:
-    #         raise ValidationError('Not enough money')
-    #     return cleaned_data
 
 # Transaction
 class Charge(models.Model):
@@ -58,7 +53,7 @@ class User(AbstractUser):
 
     phone_number = models.CharField(max_length=30)
     adress = models.CharField(max_length=300, blank=True, null=True)
-
+    url_image = models.URLField(max_length = 200,  blank=True, null=True)
 
 class UserEdit(models.Model):
 
@@ -66,9 +61,6 @@ class UserEdit(models.Model):
     password = models.CharField(max_length=100, blank=True, null=True)
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     adress = models.CharField(max_length=300, blank=True, null=True)
+    url_image = models.URLField(max_length = 200, blank=True, null=True)
 
 
-# class ChargeEdit(models.Model):
-#
-#     date = models.DateField()
-#     value = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
