@@ -6,9 +6,9 @@
    <form action="{% url 'login' %}" method="post">
        {% csrf_token %}
         <h3>Input Username:</h3><br/>
-        <input name="username" type="text"><br/>
+        <input name="username" type="text" required placeholder="Enter your username"><br/>
         <h3>Input Password:</h3><br/>
-        <input name="password" type="password"><br/>
+        <input name="password" type="password" required placeholder="Enter your password"><br/>
       <br/>
       <input value="Войти" type="submit">
       <h3><a href="{% url 'registration' %}">Registration</a></h3>
