@@ -7,7 +7,7 @@ from finance.views import serialized_charges, charges, create_account, serialize
     csv_month
 
 urlpatterns = [
-    url(r'csv/(?P<username>\w+)/(?P<account_holder>\w+)', csv_month),
+    url(r'csv/(?P<username>\w+)/(?P<account_holder>\w+)', csv_month, name='get_data'),
     url(r'^api/user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/json$',
         ChargeViewSet.as_view({'get': 'list'})),
     url(r'^api/user/(?P<username>\w+)/accounts$', AccountViewSet.as_view({'get': 'list'})),
@@ -16,6 +16,7 @@ urlpatterns = [
     # url(r'users', csrf_exempt(UserViewSet.as_view({'get': 'list', 'post': 'create'}))),
     # url(r'accounts', AccountViewSet.as_view({'get': 'list'})),
     # url(r'allcharges', csrf_exempt(ChargeViewSet.as_view({'get': 'list', 'post': 'create'}))),
+
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/(?P<chargeid>\w+)/delete$', charge_delete,
         name='charge_delete'),
     url(r'user/(?P<username>\w+)/account/(?P<account_holder>\w+)/charges/(?P<chargeid>\w+)/edit$', charge_edit,
