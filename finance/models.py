@@ -3,6 +3,7 @@ from django.db.models import Avg
 from django.db.models.functions import TruncMonth
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.forms import ValidationError
 
 
 # Bank account
@@ -18,6 +19,11 @@ class Account(models.Model):
     class Meta:
         db_table = 'charges'
 
+    # def clean(self):
+    #     cleaned_data = super(Account, self).clean()
+    #     if self.total < 0:
+    #         raise ValidationError('Not enough money')
+    #     return cleaned_data
 
 # Transaction
 class Charge(models.Model):
@@ -62,7 +68,7 @@ class UserEdit(models.Model):
     adress = models.CharField(max_length=300, blank=True, null=True)
 
 
-class ChargeEdit(models.Model):
-
-    date = models.DateField(blank=True, null=True)
-    value = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+# class ChargeEdit(models.Model):
+#
+#     date = models.DateField()
+#     value = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)

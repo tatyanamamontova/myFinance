@@ -4,26 +4,30 @@
         <h3><a href="{% url 'account_view' user account %}">Account Holder - {{ account }}</a></h3>
         <form  method="post">
             {% csrf_token %}
-            <h3>Транзакция</h3>
-            <h4>Дата транзакции</h4>
+            <h3>Transaction</h3>
+            <h4>Date of transaction</h4>
             <input name="date" type="date"><br/><br/>
-            <h4>Сумма транзакции</h4>
+            <h4>Value of transaction</h4>
             <input name="value" type="number" required><br/>
             </br>
-            <button type="submit">Отправить</button>
+            <button type="submit">Send</button>
         </form>
         <br/>
         <h3>
-            Результат транзакции:
+            Result of transaction:
         </h3>
+        {% if info == None %}
             {% if form.date.value != None %}
-                Дата транзакции: {{ form.date.value }}
+               Date of transaction: {{ form.date.value }}
             {% endif %}
             {% if form.value.value != None %}
                 <br/>
-                Сумма транзакции: {{ form.value.value }}
+                Value of transaction: {{ form.value.value }}
             {% endif %}
-            <h4>Ошибки</h4>
+        {% elif info != None %}
+        Transaction has not been send.
+        {%endif%}
+            <h4>Errors</h4>
             {% for error in form.date.errors %}
                 {% if forloop.first %}
                     <ul>
@@ -33,6 +37,6 @@
                     </ul>
                 {% endif %}
             {% empty %}
-                Отсутствуют
             {% endfor %}
+{{ info }}
 {%endblock%}

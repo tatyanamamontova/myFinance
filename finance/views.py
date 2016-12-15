@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm, UserProfileEdit, ChargeEditForm
+from .forms import ChargeForm, CreateAccount, LoginForm, UserProfileForm, UserProfileEdit
 from .models import Account, Charge, User
 from .forms import ChargeForm, CreateAccount
 from .models import Account, Charge
@@ -60,6 +60,7 @@ def login_view(request):
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
+        return redirect('login')
     return render(request, 'logout.html')
 
 
@@ -242,16 +243,16 @@ def charge_edit(request, username, account_holder, chargeid):
         user = User.objects.get(username=username)
         account = Account.objects.get(user=user, account_holder=account_holder)
         charge = Charge.objects.get(account=account, id=chargeid)
-        form = ChargeEditForm()
+        form = ChargeForm()
         if request.method == 'POST':
-            form = ChargeEditForm(request.POST)
+            form = ChargeForm(request.POST)
             if form.is_valid():
                 new_date = form.cleaned_data['date']
                 new_value = form.cleaned_data['value']
-                if new_date != '':
-                    Charge.objects.filter(account=account, id=chargeid).update(date=new_date)
-                if new_value != '':
-                    Charge.objects.filter(account=account, id=chargeid).update(value=new_value)
+                # if new_date != '':
+                Charge.objects.filter(account=account, id=chargeid).update(date=new_date)
+                # if new_value != '':
+                Charge.objects.filter(account=account, id=chargeid).update(value=new_value)
                 return redirect('charge_view', username, account_holder, chargeid)
             else:
                 return HttpResponse('Not valid')
@@ -294,6 +295,7 @@ def create_charge(request, username, account_holder):
     user = User.objects.get(username=username)
     account = Account.objects.get(account_holder=account_holder)
     form = ChargeForm()
+    info = None
     if request.method == 'POST':
         form = ChargeForm(request.POST)
         if form.is_valid():
@@ -302,10 +304,13 @@ def create_charge(request, username, account_holder):
                                 date=form.cleaned_data['date'],
                                 value=form.cleaned_data['value'])
                 charge.save()
-                Account.objects.filter(user=user, account_holder=account_holder) \
-                    .update(total=F('total') + form.cleaned_data['value'])
-            return redirect('account_view',username, account_holder)
-    context = {'account': account_holder, 'form': form}
+                if account.total + form.cleaned_data['value'] < 0:
+                    info = 'You do not have enough money'
+                else:
+                    Account.objects.filter(user=user, account_holder=account_holder) \
+                        .update(total=F('total') + form.cleaned_data['value'])
+                    return redirect('account_view',username, account_holder)
+    context = {'account': account_holder, 'form': form, 'info': info}
     return render(request, 'charge.html', context)
 
 

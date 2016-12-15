@@ -1,6 +1,6 @@
 from datetime import date
 from django.forms import ModelForm, ValidationError, Form, CharField, widgets
-from finance.models import Charge, ChargeEdit, Account, User, UserEdit
+from finance.models import Charge, Account, User, UserEdit
 import re
 
 
@@ -32,12 +32,6 @@ class CreateAccount(ModelForm):
         model = Account
         fields = ['account_holder']
 
-    # def clean_account_holder(self):
-    #     existing = Account.objects.filter(username__iexact=self.cleaned_data['username'])
-    #     if existing.exists():
-    #         raise ValidationError("A user with that username already exists.")
-    #     else:
-    #         return self.cleaned_data['username']
 
 class UserProfileForm(ModelForm):
 
@@ -74,12 +68,6 @@ class UserProfileEdit(ModelForm):
         else:
             return self.cleaned_data['userprofile']
 
-    # def clean_phone_number(self):
-    #     phone_number = self.cleaned_data['phone_number']
-    #     if re.match(r'^\+\d+$', phone_number) is None:
-    #          raise ValidationError('Not International Format')
-    #     else:
-    #         return self.cleaned_data['phone_number']
 
 class LoginForm(Form):
 
@@ -90,8 +78,8 @@ class LoginForm(Form):
         fields = ['username', 'password']
 
 
-class ChargeEditForm(ModelForm):
-
-    class Meta:
-        model = ChargeEdit
-        fields = ['date', 'value']
+# class ChargeEditForm(ModelForm):
+#
+#     class Meta:
+#         model = ChargeEdit
+#         fields = ['date', 'value']

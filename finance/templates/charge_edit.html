@@ -4,9 +4,9 @@
 <form action="{% url 'charge_edit' user account charge.id%}" method="post">
     {% csrf_token %}
     <h3>Input New Date:</h3><br/>
-    <input name="date" type="date"><br/>
+    <input name="date" type="date" required placeholder="Enter date here"><br/>
     <h3>Input New Value:</h3><br/>
-    <input name="value" type="text"><br/>
+    <input name="value" type="text" required placeholder="Enter value here"><br/>
     <br>
     <button type="submit">Create</button>
     <br>
