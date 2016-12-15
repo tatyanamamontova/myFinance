@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 
 
@@ -395,3 +395,67 @@ def delete_user(request, username):
     else:
         return HttpResponse("Not valid")
     return render(request, 'delete_user.html', {'user': user})
+
+
+from rest_framework import viewsets
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+
+# User viewSet
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @csrf_exempt
+    def create(self, request, *args, **kwargs):
+        return super(UserViewSet, self).create(request, *args, **kwargs)
+
+
+# Account viewSet
+class AccountViewSet(viewsets.ModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+
+    def list(self, request, username):
+        user = User.objects.get(username=username)
+        all_accounts = Account.objects.filter(user=user)
+        serializer = AccountSerializer(all_accounts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Charge viewSet
+class ChargeViewSet(viewsets.ModelViewSet):
+    queryset = Charge.objects.all()
+    serializer_class = ChargeSerializer
+
+    def list(self, username, account_holder):
+        user = User.objects.get(username=username)
+        account = Account.objects.get(user=user, account_holder=account_holder)
+        all_charges = Charge.objects.filter(account=account)
+        serializer = ChargeSerializer(all_charges, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# CVS render
+from rest_framework.views import APIView
+from rest_framework.settings import api_settings
+from rest_framework_csv import renderers as r
+
+
+class MyUserRenderer(r.CSVRenderer):
+    header = ['month', 'value']
+
+
+@api_view(['GET'])
+@renderer_classes((MyUserRenderer,))
+def csv_month(request, username, account_holder):
+    user = User.objects.get(username=username)
+    account = Account.objects.get(user=user, account_holder=account_holder)
+    months = Charge.get_by_month(account)
+    content = [{'month': each['month'],
+                'value': each['c']}
+                for each in months]
+    response = Response(content)
+    response.content_type = 'Content-Type: text/csv'
+    return response
