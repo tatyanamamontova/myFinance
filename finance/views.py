@@ -318,6 +318,8 @@ def create_charge(request, username, account_holder):
     return render(request, 'charge.html', context)
 
 
+import matplotlib.pyplot as plt
+import pylab
 # Charges by months
 @login_required(login_url='logout_view')
 @user_view
@@ -328,6 +330,11 @@ def months(request, username, account_holder):
         by_months = Charge.get_by_month(account)
     except ObjectDoesNotExist:
         print("Can't find")
+    values = [each['c'] for each in by_months]
+    labels = [each['month'] for each in by_months]
+    plt.pie(values, labels=labels,autopct='%1.1f%%', shadow=True)
+    plt.axis('equal')
+    pylab.savefig('static/images/plot_of_months.jpg', dpi =200)
     return render(request, 'months.html', {'user': user,'account': account, 'months': by_months})
 
 
@@ -457,5 +464,5 @@ def csv_month(request, username, account_holder):
                 'value': each['c']}
                 for each in months]
     response = Response(content)
-    response.content_type = 'Content-Type: text/csv'
     return response
+

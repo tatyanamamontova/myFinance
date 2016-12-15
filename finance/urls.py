@@ -5,6 +5,11 @@ from finance.views import serialized_charges, charges, create_account, serialize
     logout_view, serialized_get_all_accounts, get_all_accounts, main_page, all_users, edit_account, delete_account,\
     edit_user,delete_user, charge_view, charge_edit, charge_delete, UserViewSet, AccountViewSet, ChargeViewSet, \
     csv_month
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+
 
 urlpatterns = [
     url(r'csv/(?P<username>\w+)/(?P<account_holder>\w+)', csv_month, name='get_data'),
@@ -43,5 +48,5 @@ urlpatterns = [
     url(r'all_users/',all_users, name='all_users'),
     url(r'^logout/$', logout_view, name='logout_view'),
     url(r'^login/$',login_view, name='login'),
-    url(r'', main_page, name = 'main_page'),
-]
+    url(r'', main_page, name = 'main_page'), ]
+# ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

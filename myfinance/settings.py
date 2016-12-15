@@ -125,6 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = '/static/images'
 
 # Django REST framework settings
 REST_FRAMEWORK = {
