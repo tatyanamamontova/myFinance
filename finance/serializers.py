@@ -1,5 +1,5 @@
 from rest_framework import views
-from rest_framework.serializers import ModelSerializer, Serializer, CharField, IntegerField, DecimalField
+from rest_framework.serializers import ModelSerializer, Serializer, CharField, DecimalField
 from rest_framework.response import Response
 from .models import Account, Charge, User
 
