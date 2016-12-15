@@ -173,7 +173,7 @@ def edit_account(request, username, account_holder):
             new_account_holder = form.cleaned_data['account_holder']
             account.account_holder = new_account_holder
             account.save()
-            return redirect('account_view', username, account_holder)
+            return redirect('account_view', username, new_account_holder)
         else:
             return HttpResponse("Not valid")
     context = {'form': form}

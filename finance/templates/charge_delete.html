@@ -1,6 +1,6 @@
 {%extends 'base.html'%}
 {%block title%} Delete charge| {{ charge.id }} | {{ user }} {%endblock%}
-{%block content%}
+{%block center%}
     <form method="post">
         {% csrf_token %}
         <h3>If you are sure that you need to delete this charge, please, press the button.</h3>
