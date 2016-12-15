@@ -1,9 +1,9 @@
 {%extends 'base.html' %}
 {%block title%} Statistics by month for {{ account }} {%endblock%}
 
-{%block content%}
+{%block center%}
         <h3><a href="{% url 'account_view' user account %}">Account holder - {{ account }}</a></h3>
-        <table border="1" bgcolor="white">
+        <table border="1" bgcolor="white" align="center">
             <tr>
                 <th>
                     Month, Year

@@ -1,7 +1,7 @@
 {%extends 'base.html' %}
 {%block title%} Login form {%endblock%}
 
-   {%block content%}   <h1>Enter the account</h1>
+   {%block center%}   <h1>Enter the account</h1>
 
    <form action="{% url 'login' %}" method="post">
        {% csrf_token %}

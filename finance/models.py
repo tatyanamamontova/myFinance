@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -44,7 +44,7 @@ class Charge(models.Model):
             .filter(account=account)\
             .annotate(month=TruncMonth('date'))\
             .values('month')\
-            .annotate(c=Avg('value'))\
+            .annotate(c=Sum('value'))\
             .values('month', 'c')
 
 

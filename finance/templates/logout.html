@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 {%block title%} Logout Form {%endblock%}
-{%block content%}
+{%block center%}
     <form method="post">
         {% csrf_token %}
         <button type="submit">Logout</button>

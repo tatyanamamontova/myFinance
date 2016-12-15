@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 {%block title%}Delete user {{user}} {%endblock%}
-{%block content%}
+{%block center%}
     <form method="post">
         {% csrf_token %}
         <h3>If you are sure that you need to delete {{user}}, please, press the button.</h3>

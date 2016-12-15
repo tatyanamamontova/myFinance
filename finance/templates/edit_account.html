@@ -1,6 +1,6 @@
 {%extends 'base.html' %}
 {%block title%} Edit account for {{user}} {%endblock%}
-{%block text%}
+{%block content%}
     <h3><a href="{% url 'profile_view' user %}">Username - {{ user }}</a></h3>
         <form method="post">
             {% csrf_token %}
